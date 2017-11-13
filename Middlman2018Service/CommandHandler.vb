@@ -42,4 +42,45 @@ Public Class CommandHandler
     Public Function CheckOnline() As String
         Return SharedData.test
     End Function
+
+    Public Function GetComputerID() As String
+        Dim cid As Integer = 0
+        Dim cr As DataTable = SharedData.ComputerTableAdapter.GetComputerByName(My.Computer.Name)
+        If cr.Rows.Count = 0 Then
+            If SharedData.ComputerTableAdapter.CreateComputer(My.Computer.Name, "0", "0", "0", "0", 0, 0, 0, 1, 1, 1, "Unknown", "Unknown") Then
+                cr = SharedData.ComputerTableAdapter.GetComputerByName(My.Computer.Name)
+                If cr.Rows.Count = 0 Then Return "0"
+            End If
+        End If
+        cid = cr.Rows(0).Field(Of Integer)("ComputerID")
+        Return cid.ToString
+    End Function
+
+    Public Function GetPrinterList() As String
+        Dim pList As String = ""
+        Dim cid As String = GetComputerID()
+        Dim pidTable As DataTable = SharedData.PLinkTableAdapter.GetPIDsByComputerID(cid)
+        For Each pid As String In pidTable.Rows(0).Field(Of String)("PrinterID")
+            pList = String.Format("{0}{1},", pList, pid)
+        Next
+        Return pList
+    End Function
+
+    Public Function GetPrinterName(ByRef pid As String) As String
+        Dim printTable As DataTable = SharedData.PrinterTableAdapter.GetPrinterByID(Integer.Parse(pid))
+        If printTable.Rows.Count > 0 Then
+            Return printTable.Rows(0).Field(Of String)("Name")
+        Else
+            Return "No Printer"
+        End If
+    End Function
+
+    Public Function GetPrinterConnection(ByRef pid As String) As String
+        Dim printTable As DataTable = SharedData.PrinterTableAdapter.GetPrinterByID(Integer.Parse(pid))
+        If printTable.Rows.Count > 0 Then
+            Return printTable.Rows(0).Field(Of String)("ConnectionString")
+        Else
+            Return "No Printer"
+        End If
+    End Function
 End Class

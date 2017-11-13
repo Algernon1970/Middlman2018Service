@@ -22,7 +22,6 @@ Public Class WebServer
     End Sub
 
     Private Sub RequestWait(ByVal ar As IAsyncResult)
-        SharedData.test = SharedData.test + 1
         If Not listener.IsListening Then
             listener.BeginGetContext(AddressOf RequestWait, Nothing)
         End If

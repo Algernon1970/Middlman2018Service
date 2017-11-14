@@ -45,7 +45,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_83DCAD26674558CEE991684328EB93DA"
+        "OwnerKey" = "8:_DF0C5B591056408A9907638B13732EFA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_92381204AC684C7B930FA481EC419878"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DF0C5B591056408A9907638B13732EFA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -64,13 +76,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_83DCAD26674558CEE991684328EB93DA"
+        "OwnerKey" = "8:_500D113A390A017818A54AAFA4038004"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_500D113A390A017818A54AAFA4038004"
+        "OwnerKey" = "8:_DF0C5B591056408A9907638B13732EFA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -89,6 +101,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_92381204AC684C7B930FA481EC419878"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_83DCAD26674558CEE991684328EB93DA"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -148,6 +166,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
     }
@@ -957,6 +983,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{58D9B4B1-83D7-4DA6-98D4-204887E2C552}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_DF0C5B591056408A9907638B13732EFA"
+            {
+            "SourcePath" = "8:..\\UserUtilities2018\\obj\\Debug\\UserUtilities2018.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_4EA918493D6F44DF8900C9E0A60F590A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{781E6D3D-297F-4727-AD27-A2A71674E5F9}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

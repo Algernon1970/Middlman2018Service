@@ -2,7 +2,6 @@
     Dim ws As New WebServer()
 
     Protected Overrides Sub OnStart(ByVal args() As String)
-        SharedData.test = 10
         ws.StartServer()
     End Sub
 

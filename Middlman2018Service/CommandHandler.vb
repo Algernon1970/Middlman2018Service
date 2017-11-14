@@ -12,14 +12,18 @@ Public Class CommandHandler
     End Function
 
     Public Function SetUser(ByVal params As String) As String
+        SharedData.currentUser = params
         Return "Name = " & params
+    End Function
+
+    Public Function GetUser() As String
+        Return SharedData.currentUser
     End Function
 
     Public Function ForceLogout() As String
         Dim t As Single
         Dim objWMIService, objComputer As Object
 
-        'Now get some privileges
         objWMIService = GetObject("Winmgmts:{impersonationLevel=impersonate,(Debug,Shutdown)}")
         For Each objComputer In objWMIService.InstancesOf("Win32_OperatingSystem")
             t = objComputer.Win32Shutdown(0, 0)
@@ -40,7 +44,7 @@ Public Class CommandHandler
     End Function
 
     Public Function CheckOnline() As String
-        Return SharedData.test
+        Return SharedData.online
     End Function
 
     Public Function GetComputerID() As String
@@ -83,4 +87,40 @@ Public Class CommandHandler
             Return "No Printer"
         End If
     End Function
+
+    Public Function LockWorkstation() As String
+        If Environment.Is64BitOperatingSystem Then
+            ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files (x86)\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities LOCK", "C:\Program Files (x86)\Ashby School\MiddlemanInstaller", True)
+        Else
+            ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities LOCK", "C:\Program Files\Ashby School\MiddlemanInstaller", True)
+        End If
+        Return "OK"
+    End Function
+
+    Public Function GPUpdate() As String
+        If Environment.Is64BitOperatingSystem Then
+            ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files (x86)\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities GPUPDATE", "C:\Program Files (x86)\Ashby School\MiddlemanInstaller", True)
+        Else
+            ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities GPUPDATE", "C:\Program Files\Ashby School\MiddlemanInstaller", True)
+        End If
+        Return "OK"
+    End Function
+
+    ''' <summary>
+    ''' Is Z Drive mapped and ready?
+    ''' </summary>
+    ''' <returns>Yes/No</returns>
+    Public Function Gotz() As String
+        Return "YES"
+    End Function
+
+    Public Function ReadReg(ByRef path As String) As String
+        If Environment.Is64BitOperatingSystem Then
+            My.Computer.Registry.LocalMachine.GetValue()
+        Else
+
+        End If
+
+    End Function
+
 End Class

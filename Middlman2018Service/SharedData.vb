@@ -3,4 +3,8 @@
     Public PLinkTableAdapter As New ZuulDataSetTableAdapters.Lnk_ComputerPrinterTableAdapter
     Public PrinterTableAdapter As New ZuulDataSetTableAdapters.Tbl_PrinterTableAdapter
 
+    Public online As String = "Needs to be coded"
+    Public currentUser As String = "Noone"
+
 End Module
+

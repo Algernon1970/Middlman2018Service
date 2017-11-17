@@ -115,22 +115,36 @@ Public Class CommandHandler
     End Function
 
     Public Function ReadReg(ByRef path As String) As String
-        Dim reg As RegInfo = ParseRegPath(path)
-        Dim reginfo As RegInfo = RegEdit.ReadReg(reg)
-        Return reginfo.value.ToString
+        Try
+            Dim reg As RegInfo = ParseRegPath(path)
+            If Not reg.returnMessage.StartsWith("Error") Then
+                reg = RegEdit.ReadReg(reg)
+            End If
+            Return reg.value.ToString
+        Catch ex As RegistryException
+            Return ex.errorSource & " - " & ex.Message
+        End Try
+
     End Function
 
     Public Function WriteReg(ByRef path As String) As String
-        Dim pathbits As String() = path.Split("=")
-        If pathbits.Count <> 2 Then
-            Return ("Incorrect format to writereg " & path)
-        End If
+        Try
+            Dim pathbits As String() = path.Split("=")
+            If pathbits.Count <> 2 Then
+                Return ("Incorrect format to writereg " & path)
+            End If
 
-        Dim reg As RegInfo = ParseRegPath(pathbits(0))
-        reg = ParseValueObject(pathbits(1), reg)
+            Dim reg As RegInfo = ParseRegPath(pathbits(0))
+            reg = ParseValueObject(pathbits(1), reg)
+            If Not reg.returnMessage.StartsWith("Error") Then
+                reg = RegEdit.WriteReg(reg)
+            End If
 
-        Dim reginfo As RegInfo = RegEdit.WriteReg(reg)
-        Return reginfo.returnMessage
+            Return reg.returnMessage
+        Catch ex As RegistryException
+            Return ex.errorSource & " - " & ex.Message
+        End Try
+
     End Function
 
 End Class

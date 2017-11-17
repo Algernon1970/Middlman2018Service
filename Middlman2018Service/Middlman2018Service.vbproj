@@ -89,6 +89,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="RegEdit.vb" />
+    <Compile Include="RegistryException.vb" />
     <Compile Include="Service1.vb">
       <SubType>Component</SubType>
     </Compile>

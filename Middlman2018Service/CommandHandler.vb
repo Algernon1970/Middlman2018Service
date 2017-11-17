@@ -115,12 +115,22 @@ Public Class CommandHandler
     End Function
 
     Public Function ReadReg(ByRef path As String) As String
-        If Environment.Is64BitOperatingSystem Then
-            My.Computer.Registry.LocalMachine.GetValue()
-        Else
+        Dim reg As RegInfo = ParseRegPath(path)
+        Dim reginfo As RegInfo = RegEdit.ReadReg(reg)
+        Return reginfo.value.ToString
+    End Function
 
+    Public Function WriteReg(ByRef path As String) As String
+        Dim pathbits As String() = path.Split("=")
+        If pathbits.Count <> 2 Then
+            Return ("Incorrect format to writereg " & path)
         End If
 
+        Dim reg As RegInfo = ParseRegPath(pathbits(0))
+        reg = ParseValueObject(pathbits(1), reg)
+
+        Dim reginfo As RegInfo = RegEdit.WriteReg(reg)
+        Return reginfo.returnMessage
     End Function
 
 End Class

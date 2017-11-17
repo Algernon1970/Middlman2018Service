@@ -5,6 +5,7 @@
 
     Public online As String = "Needs to be coded"
     Public currentUser As String = "Noone"
+    Public currentUserSid As String = "0"
 
 End Module
 

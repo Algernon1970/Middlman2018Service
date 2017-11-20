@@ -128,6 +128,7 @@ Module RegEdit
             reg.hive = path.Split("\")(0)
             reg.name = path.Substring(lastSlashPos + 1)
             reg.path = path.Substring(firstSlashPos + 1, (lastSlashPos - firstSlashPos))
+            reg.returnMessage = "OK"
             Return reg
         Catch ex As Exception
             Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, ex.Message)
@@ -138,29 +139,31 @@ Module RegEdit
     Public Function ParseValueObject(ByVal value As String, ByRef reg As RegInfo) As RegInfo
         Dim valuebits As String() = value.Split(":")
         If valuebits.Count <> 2 Then
-            reg.returnMessage = "Error ParseValueObject - Invalid format for ValueObject " & value
+            Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Error ParseValueObject - Invalid format for ValueObject " & value)
         End If
         reg.type = RegistryValueKind.String
         reg.value = "Error ParseValueObject - Unknown type"
         reg.returnMessage = "Error ParseValueObject - Unknown type"
-        Select Case valuebits(1)
-            Case "Binary"
+        Select Case valuebits(1).ToLower
+            Case "binary"
                 reg.type = RegistryValueKind.Binary
                 reg.value = System.Text.Encoding.Unicode.GetBytes(value)
-            Case "DWord"
+            Case "dword"
                 reg.type = RegistryValueKind.DWord
                 reg.value = Integer.Parse(value)
-            Case "ExpandString"
+            Case "expandstring"
                 reg.type = RegistryValueKind.ExpandString
                 reg.value = value
-            Case "QWord"
+            Case "qword"
                 reg.type = RegistryValueKind.QWord
                 reg.value = Int64.Parse(value)
-            Case "String"
+            Case "string"
                 reg.type = RegistryValueKind.String
                 reg.value = value
+            Case Else
+                Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Error ParseValueObject - unknown type " & value)
         End Select
-
+        reg.returnMessage = "OK"
         Return reg
     End Function
 

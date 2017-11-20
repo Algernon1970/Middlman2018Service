@@ -1,4 +1,7 @@
-﻿Imports AshbyTools
+﻿Imports System
+Imports System.DirectoryServices
+Imports System.Security.Principal
+Imports AshbyTools
 Imports AshbyTools.murrayju.ProcessExtensions
 
 Public Class CommandHandler
@@ -117,14 +120,11 @@ Public Class CommandHandler
     Public Function ReadReg(ByRef path As String) As String
         Try
             Dim reg As RegInfo = ParseRegPath(path)
-            If Not reg.returnMessage.StartsWith("Error") Then
-                reg = RegEdit.ReadReg(reg)
-            End If
+            reg = RegEdit.ReadReg(reg)
             Return reg.value.ToString
         Catch ex As RegistryException
             Return ex.errorSource & " - " & ex.Message
         End Try
-
     End Function
 
     Public Function WriteReg(ByRef path As String) As String
@@ -144,7 +144,48 @@ Public Class CommandHandler
         Catch ex As RegistryException
             Return ex.errorSource & " - " & ex.Message
         End Try
+    End Function
 
+    Public Function DelRegValue(ByRef path As String) As String
+        Try
+            Dim reg As RegInfo = ParseRegPath(path)
+            reg = RegEdit.DeleteRegValue(reg)
+            Return reg.returnMessage.ToString
+        Catch ex As RegistryException
+            Return ex.errorSource & " - " & ex.Message
+        End Try
+    End Function
+
+    Public Function DelRegKey(ByRef path As String) As String
+        Try
+            Dim reg As RegInfo = ParseRegPath(path)
+            reg = RegEdit.DeleteRegKey(reg)
+            Return reg.returnMessage.ToString
+        Catch ex As RegistryException
+            Return ex.errorSource & " - " & ex.Message
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' Add/Remove user to local admin
+    ''' </summary>
+    ''' <param name="param">Add or Remove</param>
+    ''' <returns></returns>
+    Public Function LocalAdmin(ByRef param As String) As String
+        Dim username As String = My.User.Name
+        Dim pcname As String = My.Computer.Name
+        Try
+            Dim LCL As New DirectoryEntry("WinNT://" & pcname & ",computer")
+            Dim DOM As New DirectoryEntry("WinNT://" & "as")
+            Dim DOMUSR As DirectoryEntry = DOM.Children.Find(username, "user")
+            Dim LCLGRP As DirectoryEntry = LCL.Children.Find("administrators", "group")
+            LCLGRP.Invoke(param, New Object() {DOMUSR.Path.ToString})
+            LCLGRP.CommitChanges()
+            LCLGRP.Close()
+        Catch ex As Exception
+            Return "Error - " & ex.Message
+        End Try
+        Return "OK"
     End Function
 
 End Class

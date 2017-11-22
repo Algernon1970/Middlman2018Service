@@ -7,5 +7,17 @@
     Public currentUser As String = "Noone"
     Public currentUserSid As String = "0"
 
+    Public Function AmIOnDomain() As String
+        Try
+            ComputerTableAdapter.Connection.Open()
+        Catch ex As Exception
+            Return "Offline"
+        End Try
+
+        Dim serverv As String = ComputerTableAdapter.Connection.ServerVersion
+        ComputerTableAdapter.Connection.Close()
+        Return serverv
+    End Function
+
 End Module
 

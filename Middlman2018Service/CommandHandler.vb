@@ -50,6 +50,11 @@ Public Class CommandHandler
         Return SharedData.online
     End Function
 
+    Public Function RecheckOnline() As String
+        Dim ret As String = AmIOnDomain()
+        Return If(ret = "Offline", "Offline", "Online")
+    End Function
+
     Public Function GetComputerID() As String
         Dim cid As Integer = 0
         Dim cr As DataTable = SharedData.ComputerTableAdapter.GetComputerByName(My.Computer.Name)
@@ -67,9 +72,16 @@ Public Class CommandHandler
         Dim pList As String = ""
         Dim cid As String = GetComputerID()
         Dim pidTable As DataTable = SharedData.PLinkTableAdapter.GetPIDsByComputerID(cid)
-        For Each pid As String In pidTable.Rows(0).Field(Of String)("PrinterID")
-            pList = String.Format("{0}{1},", pList, pid)
-        Next
+        Dim pid As Integer
+        If pidTable.Rows.Count > 0 Then
+            For Each row As DataRow In pidTable.Rows
+                pid = row.Field(Of Integer)("PrinterID")
+                pList = String.Format("{0}{1},", pList, pid)
+            Next
+        End If
+        If pList.Length = 0 Then
+            pList = "No Printers"
+        End If
         Return pList
     End Function
 

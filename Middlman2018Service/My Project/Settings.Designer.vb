@@ -57,7 +57,8 @@ Namespace My
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.ConnectionString),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=SVR-LICENSES;Initial Catalog=Zuul;User ID=zuul;Password=Zuul21Ben")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=SVR-LICENSES;Initial Catalog=Zuul;Persist Security Info=True;User ID="& _ 
+            "Zuul;Password=Zuul21Ben;Connect Timeout=500")>  _
         Public ReadOnly Property ZuulConnectionString1() As String
             Get
                 Return CType(Me("ZuulConnectionString1"),String)

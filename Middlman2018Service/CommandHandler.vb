@@ -80,7 +80,9 @@ Public Class CommandHandler
             Next
         End If
         If pList.Length = 0 Then
-            pList = "No Printers"
+            pList = "0"
+        Else
+            pList = pList.Substring(0, pList.Length - 1)
         End If
         Return pList
     End Function

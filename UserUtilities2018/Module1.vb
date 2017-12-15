@@ -32,7 +32,7 @@ Module Module1
 
             If arg.Equals("PRINTER") Then
                 Dim pinfo As New PrinterInfo
-                Dim parg() As String = arg.Substring(10).Split(",")
+                Dim parg() As String = arg.Substring(10).Split(","c)
                 pinfo.name = parg(0)
                 pinfo.connection = parg(1)
                 If parg(2).Equals("DEFAULT") Then

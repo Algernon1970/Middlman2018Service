@@ -1,8 +1,10 @@
 ﻿Imports System
+Imports System.IO
 Imports System.DirectoryServices
 Imports System.Security.Principal
 Imports AshbyTools
 Imports AshbyTools.murrayju.ProcessExtensions
+Imports Microsoft.Win32
 
 Public Class CommandHandler
 
@@ -16,6 +18,11 @@ Public Class CommandHandler
 
     Public Function SetUser(ByVal params As String) As String
         SharedData.currentUser = params
+        Dim pr As DataTable = SharedData.PersonTableAdapter.GetPersonBySam(SharedData.currentUser)
+        If pr.Rows.Count = 0 Then
+            pr = CreateUserRecord(SharedData.currentUser)
+        End If
+        SharedData.currentUserSid = pr(0).Field(Of String)("SID")
         Return "Name = " & params
     End Function
 
@@ -59,7 +66,7 @@ Public Class CommandHandler
         Dim cid As Integer = 0
         Dim cr As DataTable = SharedData.ComputerTableAdapter.GetComputerByName(My.Computer.Name)
         If cr.Rows.Count = 0 Then
-            If SharedData.ComputerTableAdapter.CreateComputer(My.Computer.Name, "0", "0", "0", "0", 0, 0, 0, 1, 1, 1, "Unknown", "Unknown") Then
+            If SharedData.ComputerTableAdapter.CreateComputer(My.Computer.Name, "0", "0", "", "", 0, 0, False, 1, 1, "0", "0", Now.ToShortDateString, 0) <> 0 Then
                 cr = SharedData.ComputerTableAdapter.GetComputerByName(My.Computer.Name)
                 If cr.Rows.Count = 0 Then Return "0"
             End If
@@ -68,21 +75,42 @@ Public Class CommandHandler
         Return cid.ToString
     End Function
 
+    Public Function GetPersonID() As String
+        Dim pid As Integer = 0
+        Dim pr As DataTable = SharedData.PersonTableAdapter.GetPersonBySam(SharedData.currentUser)
+        If pr.Rows.Count = 0 Then
+            pr = CreateUserRecord(SharedData.currentUser)
+        End If
+        pid = pr.Rows(0).Field(Of Integer)("PersonID")
+        Return pid.ToString
+    End Function
+
+    Private Function CreateUserRecord(ByVal sam As String) As DataTable
+        Dim upx As UserPrincipalex = getUserPrincipalexbyUsername(userCTX, sam)
+        SharedData.PersonTableAdapter.CreatePerson(upx.GivenName, upx.Surname, sam, upx.Sid.ToString)
+        Return SharedData.PersonTableAdapter.GetPersonBySam(sam)
+    End Function
+
     Public Function GetPrinterList() As String
-        Dim pList As String = ""
-        Dim cid As String = GetComputerID()
-        Dim pidTable As DataTable = SharedData.PLinkTableAdapter.GetPIDsByComputerID(cid)
+        Dim pList As String = ","
+        Dim cid As Integer = Integer.Parse(GetComputerID())
+        Dim pidTable As DataTable = SharedData.PrinterLinkTableAdapter.GetPIDsByComputerID(cid)
         Dim pid As Integer
         If pidTable.Rows.Count > 0 Then
             For Each row As DataRow In pidTable.Rows
                 pid = row.Field(Of Integer)("PrinterID")
-                pList = String.Format("{0}{1},", pList, pid)
+                If row.Field(Of Boolean)("isDefaultPrinter") Then
+                    pList = String.Format("{0},*{1}", pList, pid)
+                Else
+                    pList = String.Format("{0},{1}", pList, pid)
+                End If
+
             Next
         End If
-        If pList.Length = 0 Then
+        If pList.Length = 1 Then
             pList = "0"
         Else
-            pList = pList.Substring(0, pList.Length - 1)
+            pList = pList.Substring(1)
         End If
         Return pList
     End Function
@@ -123,6 +151,16 @@ Public Class CommandHandler
         Return "OK"
     End Function
 
+    Public Function HookGatekeeper(ByRef opt As String) As String
+        Dim ret As String
+        If opt.ToLower.Equals("on") Then
+            ret = WriteReg("hklm\software\microsoft\windows nt\currentversion\winlogin\shell=c:\program files (x86)\ashby school\gatekeeper2018.exe|String")
+        Else
+            ret = WriteReg("hklm\software\microsoft\windows nt\currentversion\winlogin\shell=explorer.exe|String")
+        End If
+        Return ret
+    End Function
+
     ''' <summary>
     ''' Is Z Drive mapped and ready?
     ''' </summary>
@@ -143,7 +181,7 @@ Public Class CommandHandler
 
     Public Function WriteReg(ByRef path As String) As String
         Try
-            Dim pathbits As String() = path.Split("=")
+            Dim pathbits As String() = path.Split("="c)
             If pathbits.Count <> 2 Then
                 Return ("Incorrect format to writereg " & path)
             End If
@@ -186,7 +224,7 @@ Public Class CommandHandler
     ''' <param name="param">Add or Remove</param>
     ''' <returns></returns>
     Public Function LocalAdmin(ByRef param As String) As String
-        Dim username As String = My.User.Name
+        Dim username As String = SharedData.currentUser
         Dim pcname As String = My.Computer.Name
         Try
             Dim LCL As New DirectoryEntry("WinNT://" & pcname & ",computer")
@@ -202,4 +240,109 @@ Public Class CommandHandler
         Return "OK"
     End Function
 
+    Public Function IsPrivUser() As String
+        Dim cid As Integer = Integer.Parse(GetComputerID())
+        Dim pid As Integer = Integer.Parse(GetPersonID())
+        Dim count As Integer = SharedData.PersonLinkTableAdapter.PrivExists(cid, pid)
+        If count > 0 Then
+            Return True
+        Else
+            Return False
+        End If
+
+
+    End Function
+
+    Public Function GetPriv() As String
+        'get priv file from DB and store local
+        Dim FileTable As New ZuulDataSetTableAdapters.Tbl_FilesTableAdapter
+        Dim tbl As DataTable = FileTable.GetDataByTitle("Priv")
+        If tbl.Rows.Count > 0 Then
+            Dim row As DataRow = tbl.Rows(0)
+            Dim dataItem As Byte() = row.Field(Of Byte())("Data")
+            Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) & "\Ashby School\privsfile.txt"
+            Using fs As New FileStream(path, FileMode.Create)
+                fs.Write(dataItem, 0, dataItem.Length)
+            End Using
+            Return True
+        End If
+        Return False
+    End Function
+
+    Public Function SetPriv() As String
+        Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) & "\Ashby School\privsfile.txt"
+        Dim line As String = ""
+        Dim regvalue As String = ""
+        Dim op As RegInfo = New RegInfo
+        If File.Exists(path) Then
+            Using fs As New StreamReader(path)
+                Do While fs.Peek() <> -1
+                    line = fs.ReadLine()
+                    If line.StartsWith("KeyName:") Then
+                        op.hive = "hkcu"
+                        op.path = line.Split(":", 2, StringSplitOptions.None)(1)
+                    ElseIf line.StartsWith("ValueName:") Then
+                        op.name = line.Split(":", 2, StringSplitOptions.None)(1)
+                    ElseIf line.StartsWith("Value:") Then
+                        regvalue = line.Split(":", 2, StringSplitOptions.None)(1)
+                        Select Case op.type
+                            Case RegistryValueKind.Binary
+                                op.value = System.Text.Encoding.Unicode.GetBytes(regvalue)
+                            Case RegistryValueKind.DWord
+                                regvalue = regvalue.Substring(2).TrimStart("0")
+                                op.value = Convert.ToInt32(regvalue, 16)
+                            Case RegistryValueKind.String
+                                op.value = regvalue
+                        End Select
+                        EnactPriv(op)
+                    ElseIf line.StartsWith("ValueType:") Then
+                        Dim regtype As String = line.Split(":", 2, StringSplitOptions.None)(1)
+                        Select Case regtype.ToLower
+                            Case "binary"
+                                op.type = RegistryValueKind.Binary
+
+                            Case "reg_dword"
+                                op.type = RegistryValueKind.DWord
+
+                            Case "expandstring"
+                                op.type = RegistryValueKind.ExpandString
+                                op.value = regvalue
+                            Case "qword"
+                                op.type = RegistryValueKind.QWord
+                                op.value = Int64.Parse(regvalue)
+                            Case "reg_sz"
+                                op.type = RegistryValueKind.String
+
+                            Case Else
+                                Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Error ParseValueObject - unknown type " & op.value)
+                        End Select
+                    End If
+                Loop
+                fs.Close()
+                fs.Dispose()
+
+            End Using
+        End If
+        Return "OK"
+    End Function
+
+    Public Sub EnactPriv(ByRef op As RegInfo)
+        If op.name.StartsWith("**del.") Then
+            DeleteRegValue(op)
+        ElseIf op.name.StartsWith("**delvals.") Then
+            DeleteRegKey(op)
+        Else
+            RegEdit.WriteReg(op)
+        End If
+    End Sub
+
 End Class
+
+Public Structure Regop
+    Dim keyname As String
+    Dim valuename As String
+    Dim valuetype As String
+    Dim value As String
+    Dim hive As String
+End Structure
+

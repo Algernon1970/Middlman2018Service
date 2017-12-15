@@ -42,7 +42,7 @@ Public Class WebServer
         output.Close()
     End Sub
 
-    Private Function HandleCommands(ByRef c As HttpListenerContext)
+    Private Function HandleCommands(ByRef c As HttpListenerContext) As String
         Try
             If IsNothing(c.Request.QueryString("params")) Then
                 Return CStr(CallByName(New CommandHandler, c.Request.QueryString("command"), Microsoft.VisualBasic.CallType.Method))

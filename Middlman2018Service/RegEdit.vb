@@ -34,7 +34,8 @@ Module RegEdit
             If reg.hive.ToLower.StartsWith("hklm") Then
                 rKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, reg3264)
             ElseIf reg.hive.ToLower.StartsWith("hkcu") Then
-                rKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, reg3264)
+                rKey = RegistryKey.OpenBaseKey(RegistryHive.Users, reg3264)
+                reg.path = SharedData.currentUserSid & "\" & reg.path
             Else
                 Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Invalid Hive")
             End If
@@ -55,8 +56,10 @@ Module RegEdit
 
             If reg.hive.ToLower.StartsWith("hklm") Then
                 rKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, reg3264)
+
             ElseIf reg.hive.ToLower.StartsWith("hkcu") Then
-                rKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, reg3264)
+                rKey = RegistryKey.OpenBaseKey(RegistryHive.Users, reg3264)
+                reg.path = SharedData.currentUserSid & "\" & reg.path
             Else
                 Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Invalid Hive")
             End If
@@ -82,7 +85,8 @@ Module RegEdit
             If reg.hive.ToLower.StartsWith("hklm") Then
                 rKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, reg3264)
             ElseIf reg.hive.ToLower.StartsWith("hkcu") Then
-                rKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, reg3264)
+                rKey = RegistryKey.OpenBaseKey(RegistryHive.Users, reg3264)
+                reg.path = SharedData.currentUserSid & "\" & reg.path
             Else
                 Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Invalid Hive")
             End If
@@ -102,7 +106,7 @@ Module RegEdit
 
     Private Function OpenCreateSubKey(ByRef baseKey As RegistryKey, path As String) As RegistryKey
         Dim regKey As RegistryKey
-        For Each pathPart As String In path.Split("\")
+        For Each pathPart As String In path.Split("\"c)
             regKey = baseKey.OpenSubKey(pathPart, True)
             If IsNothing(regKey) Then
                 regKey = baseKey.CreateSubKey(pathPart, True)
@@ -125,7 +129,7 @@ Module RegEdit
         Try
             Dim firstSlashPos As Integer = path.IndexOf("\")
             Dim lastSlashPos As Integer = path.LastIndexOf("\")
-            reg.hive = path.Split("\")(0)
+            reg.hive = path.Split("\"c)(0)
             reg.name = path.Substring(lastSlashPos + 1)
             reg.path = path.Substring(firstSlashPos + 1, (lastSlashPos - firstSlashPos))
             reg.returnMessage = "OK"
@@ -137,7 +141,7 @@ Module RegEdit
     End Function
 
     Public Function ParseValueObject(ByVal value As String, ByRef reg As RegInfo) As RegInfo
-        Dim valuebits As String() = value.Split(":")
+        Dim valuebits As String() = value.Split("|"c)
         If valuebits.Count <> 2 Then
             Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Error ParseValueObject - Invalid format for ValueObject " & value)
         End If
@@ -147,25 +151,27 @@ Module RegEdit
         Select Case valuebits(1).ToLower
             Case "binary"
                 reg.type = RegistryValueKind.Binary
-                reg.value = System.Text.Encoding.Unicode.GetBytes(value)
+                reg.value = System.Text.Encoding.Unicode.GetBytes(valuebits(0))
             Case "dword"
                 reg.type = RegistryValueKind.DWord
-                reg.value = Integer.Parse(value)
+                reg.value = Integer.Parse(valuebits(0))
             Case "expandstring"
                 reg.type = RegistryValueKind.ExpandString
-                reg.value = value
+                reg.value = valuebits(0)
             Case "qword"
                 reg.type = RegistryValueKind.QWord
-                reg.value = Int64.Parse(value)
+                reg.value = Int64.Parse(valuebits(0))
             Case "string"
                 reg.type = RegistryValueKind.String
-                reg.value = value
+                reg.value = valuebits(0)
             Case Else
                 Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Error ParseValueObject - unknown type " & value)
         End Select
         reg.returnMessage = "OK"
         Return reg
     End Function
+
+
 
 End Module
 

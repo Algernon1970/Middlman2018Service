@@ -22,13 +22,13 @@
         "Entry"
         {
         "MsmKey" = "8:_500D113A390A017818A54AAFA4038004"
-        "OwnerKey" = "8:_92381204AC684C7B930FA481EC419878"
+        "OwnerKey" = "8:_59167CF4691704D3D408CB3BB2546BDA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_500D113A390A017818A54AAFA4038004"
-        "OwnerKey" = "8:_59167CF4691704D3D408CB3BB2546BDA"
+        "OwnerKey" = "8:_92381204AC684C7B930FA481EC419878"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -51,7 +51,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_83DCAD26674558CEE991684328EB93DA"
+        "OwnerKey" = "8:_9F6AEF89F981486D8E89F863EA89C466"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_92381204AC684C7B930FA481EC419878"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9F6AEF89F981486D8E89F863EA89C466"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -82,19 +94,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DF0C5B591056408A9907638B13732EFA"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E1005CFD9CA8EAD8E71D5E941C6C86BD"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_59167CF4691704D3D408CB3BB2546BDA"
+        "OwnerKey" = "8:_83DCAD26674558CEE991684328EB93DA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -106,7 +106,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_83DCAD26674558CEE991684328EB93DA"
+        "OwnerKey" = "8:_59167CF4691704D3D408CB3BB2546BDA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E1005CFD9CA8EAD8E71D5E941C6C86BD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_DF0C5B591056408A9907638B13732EFA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_9F6AEF89F981486D8E89F863EA89C466"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -267,11 +285,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.SharePoint.Client.Runtime, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_500D113A390A017818A54AAFA4038004"
-                    {
-                    "Name" = "8:Microsoft.SharePoint.Client.Runtime.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.SharePoint.Client.Runtime.dll"
             "TargetName" = "8:"
@@ -298,11 +311,6 @@
             "AssemblyAsmDisplayName" = "8:AshbyTools, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_59167CF4691704D3D408CB3BB2546BDA"
-                    {
-                    "Name" = "8:AshbyTools.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:AshbyTools.dll"
             "TargetName" = "8:"
@@ -329,11 +337,6 @@
             "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
                 "ScatterAssemblies"
                 {
-                    "_83DCAD26674558CEE991684328EB93DA"
-                    {
-                    "Name" = "8:System.Net.Http.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:System.Net.Http.dll"
             "TargetName" = "8:"
@@ -360,11 +363,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E1005CFD9CA8EAD8E71D5E941C6C86BD"
-                    {
-                    "Name" = "8:Microsoft.SharePoint.Client.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.SharePoint.Client.dll"
             "TargetName" = "8:"
@@ -441,7 +439,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MiddlemanInstaller"
         "ProductCode" = "8:{B08F878C-7D12-4AA2-973F-7D9EDF7875EC}"
-        "PackageCode" = "8:{01696E21-C358-4AA6-940D-2FCB2E8F05FD}"
+        "PackageCode" = "8:{554EB518-1775-4EA4-BCE1-E2DBF69932DD}"
         "UpgradeCode" = "8:{C4903610-7E56-4703-BADE-750D24BF87A8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -643,8 +641,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
+                            "Setting" = "3:2"
+                            "Value" = "8:WARNING: This computer program is protected by bugs."
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -714,7 +712,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:1"
+                            "Value" = "3:0"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -983,6 +981,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{58D9B4B1-83D7-4DA6-98D4-204887E2C552}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9F6AEF89F981486D8E89F863EA89C466"
+            {
+            "SourcePath" = "8:..\\Gatekeeper2018\\obj\\Debug\\Gatekeeper2018.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_4EA918493D6F44DF8900C9E0A60F590A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{75DBDFE9-8F14-41E6-BF1A-ED4FAC0AA39B}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

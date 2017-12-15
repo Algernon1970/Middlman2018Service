@@ -1,7 +1,9 @@
 ﻿Module SharedData
     Public ComputerTableAdapter As New ZuulDataSetTableAdapters.Tbl_ComputerTableAdapter
-    Public PLinkTableAdapter As New ZuulDataSetTableAdapters.Lnk_ComputerPrinterTableAdapter
+    Public PrinterLinkTableAdapter As New ZuulDataSetTableAdapters.Lnk_ComputerPrinterTableAdapter
     Public PrinterTableAdapter As New ZuulDataSetTableAdapters.Tbl_PrinterTableAdapter
+    Public PersonLinkTableAdapter As New ZuulDataSetTableAdapters.Lnk_ComputerPersonTableAdapter
+    Public PersonTableAdapter As New ZuulDataSetTableAdapters.Tbl_PersonTableAdapter
 
     Public online As String = "Needs to be coded"
     Public currentUser As String = "Noone"

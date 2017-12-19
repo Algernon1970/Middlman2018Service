@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports Hardcodet.Wpf.TaskbarNotification
 
 Class MainWindow
     Private Const WEB_URL As String = "http://127.0.0.1:1701/?command="
@@ -13,6 +14,7 @@ Class MainWindow
 
     Private ReadOnly PrintMapper As New BackgroundWorker()
     Private ReadOnly PrivUserMapper As New BackgroundWorker()
+    Private ReadOnly OneDriveMapper As New BackgroundWorker()
 
     Dim cid As Integer
     Dim online As Boolean = False
@@ -23,6 +25,7 @@ Class MainWindow
             If online Then
                 AddHandler PrintMapper.DoWork, AddressOf MapPrinters
                 AddHandler PrivUserMapper.DoWork, AddressOf HandlePrivUser
+                AddHandler OneDriveMapper.DoWork, AddressOf HandleOneDriveMapper
                 PrintMapper.RunWorkerAsync()
                 PrivUserMapper.RunWorkerAsync()
             End If
@@ -34,6 +37,14 @@ Class MainWindow
     End Sub
 
     Private Sub Setup()
+        NotifyIcon.Icon = My.Resources.whitecloud
+        Dim pwdString As String = "none"
+        Try
+            pwdString = GetPW()
+
+        Catch ex As Exception
+
+        End Try
         Dim ret As String = ""
         ret = WebLoader.Request(WEB_URL & WEB_SetName & Environment.UserName)
         ret = WebLoader.Request(WEB_URL & WEB_CheckOnline)
@@ -41,6 +52,7 @@ Class MainWindow
         If ret.ToLower.Equals("online") Then online = True
         ret = WebLoader.Request(WEB_URL & WEB_GetComputerID)
         DisplayBox.AppendText("ComputerID = " & ret & vbCrLf)
+        DisplayBox.AppendText("Password is " & pwdString & vbCrLf)
     End Sub
 
     Private Sub HandlePrivUser(sender As Object, e As DoWorkEventArgs)
@@ -69,6 +81,21 @@ Class MainWindow
         Next
     End Sub
 
+    Private Sub HandleOneDriveMapper(sender As Object, e As DoWorkEventArgs)
+        Dim mapper As New AS365Cookie.Program
+        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
+        Dim passwd As String = GetPW()
+        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-mount", "z:"})
+    End Sub
+
+    Private Function GetPW() As String
+        Dim pw As New Password()
+        Dim line As String = pw.LoadPW()
+        pw.Close()
+        pw = Nothing
+        Return line
+    End Function
+
     Private Function GetPrinterConnectionList() As List(Of Pinfo)
         Dim ret As String
         Dim plist As New List(Of Pinfo)
@@ -93,6 +120,22 @@ Class MainWindow
         Next
         Return plist
     End Function
+
+    Private Sub MapDrivesButton_Click(sender As Object, e As RoutedEventArgs) Handles MapDrivesButton.Click
+        DisplayBox.AppendText("Map Drives" & vbCrLf)
+    End Sub
+
+    Private Sub PasswordButton_Click(sender As Object, e As RoutedEventArgs) Handles PasswordButton.Click
+        Dim pwdWnd As New Password
+        pwdWnd.ShowDialog()
+
+        If pwdWnd.Status Then
+            DisplayBox.AppendText(vbCrLf & "Got PW " & pwdWnd.Passwd & vbCrLf)
+            NotifyIcon.Icon = My.Resources.greencloud
+        Else
+            NotifyIcon.Icon = My.Resources.redcloud
+        End If
+    End Sub
 End Class
 
 Structure Pinfo

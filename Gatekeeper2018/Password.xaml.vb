@@ -2,28 +2,21 @@
 Imports System.DirectoryServices.AccountManagement
 
 Public Class Password
-    Public Passwd As String = ""
     Public Status As Boolean = False
     Private Sub CheckPwdButton_Click(sender As Object, e As RoutedEventArgs) Handles CheckPwdButton.Click
         Dim pwd As String = PasswordText.Password
-        Dim res As Boolean = CheckPW(pwd)
         Dim enc As New Simple3Des("A$hbySchool1")
-        Dim cryptPassword As String = ""
-        If res Then
-            StatusText.Content = "Password is good"
+        If CheckPW(pwd) Then
             Status = True
-
-            cryptPassword = enc.EncryptData(pwd)
-            StorePW(cryptPassword)
+            StorePW(enc.EncryptData(pwd))
+            Me.Visibility = Visibility.Hidden
         Else
-            StatusText.Content = "Password is bad"
+            StatusText.Content = "Password is wrong."
             Status = False
         End If
-
-        Passwd = cryptPassword
     End Sub
 
-    Private Function CheckPW(ByRef pw As String) As Boolean
+    Public Function CheckPW(ByRef pw As String) As Boolean
         Dim res As Boolean = False
         Using pc As PrincipalContext = New PrincipalContext(ContextType.Domain, "as.internal")
             res = pc.ValidateCredentials(Environment.UserName, pw)
@@ -31,7 +24,7 @@ Public Class Password
         Return res
     End Function
 
-    Private Sub StorePW(ByRef pw As String)
+    Public Sub StorePW(ByRef pw As String)
         If Not Directory.Exists("N:\My Settings\Ashby School\") Then
             Directory.CreateDirectory("N:\My Settings\Ashby School")
         End If
@@ -42,13 +35,13 @@ Public Class Password
     End Sub
 
     Public Function LoadPW() As String
-        Using w As New StreamReader(File.Open("N:\\My Settings\\Ashby School\\cpd.ash", FileMode.Open))
-            Dim encoded As String = w.ReadLine()
-            Dim decoded As String
-            Dim decoder As New Simple3Des("A$hbySchool1")
-            decoded = decoder.DecryptData(encoded)
-            Return decoded
-        End Using
+        Dim w As New StreamReader(File.Open("N:\\My Settings\\Ashby School\\cpd.ash", FileMode.Open))
+        Dim encoded As String = w.ReadLine()
+        Dim decoder As New Simple3Des("A$hbySchool1")
+        w.Close()
+        w.Dispose()
+
+        Return decoder.DecryptData(encoded)
     End Function
 End Class
 

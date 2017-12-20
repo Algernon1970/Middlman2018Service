@@ -16,43 +16,48 @@ Class MainWindow
     Private ReadOnly PrivUserMapper As New BackgroundWorker()
     Private ReadOnly OneDriveMapper As New BackgroundWorker()
 
+    Private PasswordHandler As New Password
+
     Dim cid As Integer
     Dim online As Boolean = False
     Private Sub GatekeeperMainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles GatekeeperMainWindow.Loaded
         Dim ret As String = ""
-        Try
-            Setup()
-            If online Then
-                AddHandler PrintMapper.DoWork, AddressOf MapPrinters
-                AddHandler PrivUserMapper.DoWork, AddressOf HandlePrivUser
-                AddHandler OneDriveMapper.DoWork, AddressOf HandleOneDriveMapper
-                PrintMapper.RunWorkerAsync()
-                PrivUserMapper.RunWorkerAsync()
-            End If
 
-        Catch ex As Exception
-            statusLabel.Content = "Error"
-            DisplayBox.AppendText(vbCrLf & ex.Message)
-        End Try
+        Setup()
+            AddHandler PrintMapper.DoWork, AddressOf MapPrinters
+            AddHandler PrivUserMapper.DoWork, AddressOf HandlePrivUser
+            AddHandler OneDriveMapper.DoWork, AddressOf HandleOneDriveMapper
+            OneDriveMapper.RunWorkerAsync()
+
+        If online Then
+            PrintMapper.RunWorkerAsync()
+            PrivUserMapper.RunWorkerAsync()
+        End If
     End Sub
 
     Private Sub Setup()
         NotifyIcon.Icon = My.Resources.whitecloud
         Dim pwdString As String = "none"
         Try
-            pwdString = GetPW()
-
+            pwdString = PasswordHandler.LoadPW
+            If Not PasswordHandler.CheckPW(pwdString) Then
+                PasswordHandler.ShowDialog()
+            End If
         Catch ex As Exception
-
+            PasswordHandler.ShowDialog()
         End Try
         Dim ret As String = ""
-        ret = WebLoader.Request(WEB_URL & WEB_SetName & Environment.UserName)
-        ret = WebLoader.Request(WEB_URL & WEB_CheckOnline)
-        statusLabel.Content = ret
-        If ret.ToLower.Equals("online") Then online = True
-        ret = WebLoader.Request(WEB_URL & WEB_GetComputerID)
-        DisplayBox.AppendText("ComputerID = " & ret & vbCrLf)
-        DisplayBox.AppendText("Password is " & pwdString & vbCrLf)
+        Try
+            ret = WebLoader.Request(WEB_URL & WEB_SetName & Environment.UserName)
+            ret = WebLoader.Request(WEB_URL & WEB_CheckOnline)
+            statusLabel.Content = ret
+            If ret.ToLower.Equals("online") Then online = True
+            ret = WebLoader.Request(WEB_URL & WEB_GetComputerID)
+        Catch ex As Exception
+            DisplayBox.AppendText("Middleman not available. Contact Network Services." & vbCrLf)
+            DisplayBox.Background = Brushes.Red
+        End Try
+
     End Sub
 
     Private Sub HandlePrivUser(sender As Object, e As DoWorkEventArgs)
@@ -82,19 +87,42 @@ Class MainWindow
     End Sub
 
     Private Sub HandleOneDriveMapper(sender As Object, e As DoWorkEventArgs)
-        Dim mapper As New AS365Cookie.Program
-        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
-        Dim passwd As String = GetPW()
-        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-mount", "z:"})
+        MapZ()
+        MapY()
+        MapV()
+
+        While True
+            Threading.Thread.Sleep(10000)
+        End While
     End Sub
 
-    Private Function GetPW() As String
-        Dim pw As New Password()
-        Dim line As String = pw.LoadPW()
-        pw.Close()
-        pw = Nothing
-        Return line
-    End Function
+    Private Sub MapZ()
+        Dim mapper As New AS365Cookie.Program
+        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
+        Dim passwd As String = PasswordHandler.LoadPW
+        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-mount", "z:", "-homedir"})
+    End Sub
+
+    Private Sub MapY()
+        Dim mapper As New AS365Cookie.Program
+        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
+        Dim passwd As String = PasswordHandler.LoadPW
+        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-mount", "y:", "-map", "https://ashbyschool.sharepoint.com/StudentShared"})
+    End Sub
+
+    Private Sub MapV()
+        Dim mapper As New AS365Cookie.Program
+        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
+        Dim passwd As String = PasswordHandler.LoadPW
+        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-mount", "v:", "-map", "https://ashbyschool.sharepoint.com/StaffShared"})
+    End Sub
+
+    Private Sub MapS()
+        Dim mapper As New AS365Cookie.Program
+        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
+        Dim passwd As String = PasswordHandler.LoadPW
+        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-mount", "s:", "-map", "https://ashbyschool.sharepoint.com/SLT/SLTDocs"})
+    End Sub
 
     Private Function GetPrinterConnectionList() As List(Of Pinfo)
         Dim ret As String
@@ -126,15 +154,18 @@ Class MainWindow
     End Sub
 
     Private Sub PasswordButton_Click(sender As Object, e As RoutedEventArgs) Handles PasswordButton.Click
-        Dim pwdWnd As New Password
-        pwdWnd.ShowDialog()
+        PasswordHandler.ShowDialog()
 
-        If pwdWnd.Status Then
-            DisplayBox.AppendText(vbCrLf & "Got PW " & pwdWnd.Passwd & vbCrLf)
+        If PasswordHandler.Status Then
+            DisplayBox.AppendText(vbCrLf & "Got PW " & PasswordHandler.LoadPW & vbCrLf)
             NotifyIcon.Icon = My.Resources.greencloud
         Else
             NotifyIcon.Icon = My.Resources.redcloud
         End If
+    End Sub
+
+    Private Sub GatekeeperMainWindow_Closed(sender As Object, e As EventArgs) Handles GatekeeperMainWindow.Closed
+
     End Sub
 End Class
 

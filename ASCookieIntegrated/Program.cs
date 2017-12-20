@@ -107,8 +107,15 @@ namespace AS365Cookie
                                     {
                                         try
                                         {
-                                            DoMap(quiet, sharepointUri, disk, homedir);
-                                            OtherMaps(quiet, CommandLine);
+                                            if (CommandLine["map"] == null)
+                                            {
+                                                DoMap(quiet, sharepointUri, disk, homedir);
+                                            }
+                                            else
+                                            {
+                                                OtherMaps(quiet, CommandLine);
+                                            }
+                                            
                                         }
                                         catch (Exception e)
                                         { }
@@ -128,17 +135,17 @@ namespace AS365Cookie
 
         private static void OtherMaps(bool quiet, Args CommandLine)
         {
-            if (CommandLine["m"] != null)
+            if (CommandLine["map"] != null)
             {
                 //String username = System.DirectoryServices.AccountManagement.UserPrincipal.Current.UserPrincipalName;
                 String username = Environment.UserName + "@ashbyschool.org.uk";
                 String password = CommandLine["p"];
 
                 //if (username != null) { if (CommandLine["d"] != null) username = username.Split('@')[0] + "@" + CommandLine["d"]; }
-                String line = CommandLine["m"];
-                String[] parts = line.Split(',');
-                String[] baseparts = parts[0].Split('~');
-                Uri tempuri = new Uri(baseparts[1]);
+                String line = CommandLine["map"];
+                //String[] parts = line.Split(',');
+                //String[] baseparts = parts[0].Split('~');
+                Uri tempuri = new Uri(line);
                 if (CommandLine["u"] != null)
                 {
                     RunAsync(tempuri, username, password, false, !quiet).Wait();
@@ -158,14 +165,14 @@ namespace AS365Cookie
                 InternetSetCookie(baseUrl, null, cookies["rtFA"].ToString() + "; Expires = " + cookies["rtFA"].Expires.AddMinutes(0).ToString("R"));
 
 
-                foreach (String part in parts)
-                {
-                    String[] drivepaths = part.Split('~');
-                    String drive = drivepaths[0] + ":";
-                    String path = drivepaths[1];
-                    Uri sharepointUri = new Uri(path);
+
+                //String[] drivepaths = part.Split('~');
+                //String drive = drivepaths[0] + ":";
+                //String path = drivepaths[1];
+                String drive = CommandLine["mount"];
+                    Uri sharepointUri = new Uri(line);
                     DoMap(quiet, sharepointUri, drive, "");
-                }
+
             }
         }
 

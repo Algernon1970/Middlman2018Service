@@ -80,7 +80,8 @@ namespace Cookie365
         Uri adfsIntegratedAuthUrl;
         Uri adfsAuthUrl;
         bool useIntegratedWindowsAuth;
-        bool verbose = true;
+        bool verbose;
+        bool debug;
         static SpoAuthUtility current;
         public CookieContainer cookieContainer;
         SamlSecurityToken stsAuthToken;
@@ -94,10 +95,9 @@ namespace Cookie365
         const string saml = "urn:oasis:names:tc:SAML:1.0:assertion";
         const string spowssigninUri = "_forms/default.aspx?wa=wsignin1.0";
 
-        public static async Task<bool> Create(Uri spSiteUrl, string username, string password, bool useIntegratedWindowsAuth, bool verbose)
+        public static async Task<bool> Create(Uri spSiteUrl, string username, string password, bool useIntegratedWindowsAuth, bool verbose, bool debug)
         {
-            verbose = true;
-            var utility = new SpoAuthUtility(spSiteUrl, username, password, useIntegratedWindowsAuth, verbose);
+            var utility = new SpoAuthUtility(spSiteUrl, username, password, useIntegratedWindowsAuth, verbose, debug);
             CookieContainer cc = await utility.GetCookieContainer();
             var cookies = from Cookie c in cc.GetCookies(spSiteUrl) where c.Name == "FedAuth" select c;
             if (cookies.Count() > 0)
@@ -109,9 +109,10 @@ namespace Cookie365
                 throw new Exception("Could not retrieve Auth cookies");
         }
 
-        private SpoAuthUtility(Uri spSiteUrl, string username, string password, bool useIntegratedWindowsAuth, bool verbose)
+        private SpoAuthUtility(Uri spSiteUrl, string username, string password, bool useIntegratedWindowsAuth, bool verbose, bool debug)
         {
-            this.verbose = true;
+            this.verbose = verbose;
+            this.debug = debug;
             this.spSiteUrl = spSiteUrl;
             this.username = username;
             this.password = password;
@@ -181,11 +182,10 @@ namespace Cookie365
             // the fed auth cookie needs to be attached to all SPO REST services requests
             Uri siteUri = this.spSiteUrl;
             Uri wsSigninUrl = new Uri(String.Format("{0}://{1}/{2}", siteUri.Scheme, siteUri.Authority, spowssigninUri));
-            if (verbose) WriteLog(String.Format("SIGNIN URL = {0}://{1}/{2}", siteUri.Scheme, siteUri.Authority, spowssigninUri));
             HttpClientHandler clientHandler;
             if (WebRequest.DefaultWebProxy.GetProxy(siteUri).ToString() != siteUri.ToString())
             {
-                WriteLog("Using proxy...[" + WebRequest.DefaultWebProxy.GetProxy(siteUri).ToString() + "]");
+                if (verbose) Console.WriteLine("Using proxy...[" + WebRequest.DefaultWebProxy.GetProxy(siteUri).ToString() + "]");
                 clientHandler = new HttpClientHandler();
                 WebProxy proxy = new WebProxy((WebRequest.DefaultWebProxy.GetProxy(siteUri)));
                 proxy.Credentials = CredentialCache.DefaultCredentials;
@@ -197,7 +197,7 @@ namespace Cookie365
             else clientHandler = new HttpClientHandler();
             SPOAuthCookies spoAuthCookies = null;
 
-            WriteLog("Retrieving Cookies....");
+            if (verbose) Console.Write("Retrieving Cookies....");
             try
             {
                 await HttpUtility.SendHttpRequest(
@@ -213,11 +213,11 @@ namespace Cookie365
                 spoAuthCookies.RtFA = clientHandler.CookieContainer.GetCookies(wsSigninUrl)["rtFA"].Value;
                 spoAuthCookies.Expires = stsToken.Expires;
                 spoAuthCookies.Host = wsSigninUrl;
-                WriteLog("[OK]");
+                if (verbose) Console.WriteLine("[OK]");
             }
             catch (Exception e)
             {
-                WriteLog("[ERROR GetSPOAuthCookies]:" + e.Message);
+                Console.WriteLine("[ERROR]:" + e.Message);
                 throw new Exception("Problems retrieving Cookies.");
             }
             return spoAuthCookies;
@@ -228,30 +228,32 @@ namespace Cookie365
             // make a post request with the user's login name to MSO HRD (Home Realm Discovery) service 
             // so it can find out the url of the federation service (corporate ADFS) responsible for authenticating the user
             Uri corpAdfsProxyUrl = null;
-            WriteLog("Retrieving ADFS URL...");
+            if (verbose) Console.Write("Retrieving ADFS URL...");
 
             try
             {
-                var ContentVar = new MemoryStream(Encoding.UTF8.GetBytes(String.Format("handler=1&login={0}", this.username)));
-                WriteLog(msoHrdUrl + String.Format("handler=1&login={0}", this.username));
                 byte[] response = await HttpUtility.SendHttpRequest(
                     new Uri(msoHrdUrl),
                     HttpMethod.Post,
-                    ContentVar, // pass in the login name in the body of the form
+                    new MemoryStream(Encoding.UTF8.GetBytes(String.Format("handler=1&login={0}", this.username))), // pass in the login name in the body of the form
                     "application/x-www-form-urlencoded",
                     null);
 
                 var serializer = new JavaScriptSerializer();
                 var deserializedResponse = serializer.Deserialize<Dictionary<string, object>>(Encoding.UTF8.GetString(response, 0, response.Length));
                 corpAdfsProxyUrl = deserializedResponse.ContainsKey("AuthURL") ? new Uri(deserializedResponse["AuthURL"] as string) : null;
-
-                    if (corpAdfsProxyUrl != null) WriteLog("[OK]"); else WriteLog("[KO] (Probably not ADFS Federated)");
+                if (verbose)
+                {
+                    if (corpAdfsProxyUrl != null) Console.WriteLine("[OK]"); else Console.WriteLine("[KO] (Probably not ADFS Federated)");
+                }
             }
             catch (Exception e)
             {
-                if (verbose) WriteLog("[ERROR GetAdfsAuthUrl]:" + e.Message);
+                if (verbose) Console.WriteLine("[ERROR]:" + e.Message);
             }
+            if (debug) Console.WriteLine("ADFS PROXY URL=[" + corpAdfsProxyUrl + "]");
             return corpAdfsProxyUrl;
+
         }
 
 
@@ -272,9 +274,7 @@ namespace Cookie365
                 this.username,
                 this.password,
                 stsUsernameMixedUrl));
-            if (verbose) WriteLog("Logging in and retrieving SAML Token...");
-            //WriteLog("Req = " + System.Text.Encoding.Default.GetString(requestBody));
-            //WriteLog("To = " + stsUsernameMixedUrl);
+            if (verbose) Console.Write("Logging in and retrieving SAML Token...");
 
             try
             {
@@ -284,9 +284,7 @@ namespace Cookie365
                     new MemoryStream(requestBody),
                     "application/soap+xml; charset=utf-8",
                     null);
-                WriteLog("GetAdfsSAMLTokenUsernamePassword - Sent Req and got response");
-                
-                WriteLog("Resp = " + response.ToString());
+
                 // the logon token is in the SAML assertion element of the message body
                 XDocument xDoc = XDocument.Parse(Encoding.UTF8.GetString(response, 0, response.Length), LoadOptions.PreserveWhitespace);
                 var assertion = from e in xDoc.Descendants()
@@ -300,11 +298,11 @@ namespace Cookie365
                 // XML error back from ADFSs
                 XDocument doc1 = XDocument.Parse(samlAssertion);
                 samlAssertion = doc1.ToString(SaveOptions.DisableFormatting);
-                if (verbose) WriteLog("[OK]");
+                if (verbose) Console.WriteLine("[OK]");
             }
             catch (Exception e)
             {
-                WriteLog("[ERROR GetAdfsSAMLTokenUsernamePassword]:" + e.Message);
+                Console.WriteLine("[ERROR]:" + e.Message);
                 throw new Exception("Problems with authentication or SAML token retrieval");
             }
 
@@ -322,9 +320,8 @@ namespace Cookie365
             string samlAssertion = null;
 
             HttpClientHandler handler = new HttpClientHandler();
-            handler.Credentials = System.Net.CredentialCache.DefaultCredentials;
-            //handler.UseDefaultCredentials = true; // use the default credentials so Kerberos can take care of authenticating our request
-            Console.Write(String.Format("Logging in and retrieving SAML Token...{0}", adfsIntegratedAuthUrl.OriginalString));
+            handler.UseDefaultCredentials = true; // use the default credentials so Kerberos can take care of authenticating our request
+            if (verbose) Console.Write("Logging in and retrieving SAML Token...");
             try
             {
                 byte[] stsresponse = await HttpUtility.SendHttpRequest(
@@ -335,6 +332,9 @@ namespace Cookie365
                 handler);
 
                 StreamReader sr = new StreamReader(new MemoryStream(stsresponse));
+
+                if (debug) Console.WriteLine("URL=[" + this.adfsIntegratedAuthUrl + "]  " + stsresponse.ToString());
+
                 XDocument xDoc = XDocument.Parse(sr.ReadToEnd(), LoadOptions.PreserveWhitespace);
 
                 var body = from e in xDoc.Descendants()
@@ -368,11 +368,11 @@ namespace Cookie365
                     XDocument doc1 = XDocument.Parse(samlAssertion);
                     samlAssertion = doc1.ToString(SaveOptions.DisableFormatting);
                 }
-                if (verbose) WriteLog("[OK]");
+                if (verbose) Console.WriteLine("[OK]");
             }
             catch (Exception e)
             {
-                WriteLog("[ERROR GetAdfsSAMLTokenWinAuth]:" + e.Message);
+                Console.WriteLine("[ERROR]:" + e.Message);
                 throw new Exception("Problems with authentication or SAML token retrieval");
             }
 
@@ -403,7 +403,11 @@ namespace Cookie365
 
                     // specify in the query string we want a logon token to present to the Microsoft Federation Gateway
                     // for the corresponding user
-                    ub.Query = String.Format("{0}&wa=wsignin1.0&wtrealm=urn:federation:MicrosoftOnline", this.adfsAuthUrl.Query.Remove(0, 1)).
+                    if (debug) Console.WriteLine("FORMAT=[" + String.Format("{0}&wa=wsignin1.0&wtrealm=urn:federation:MicrosoftOnline", this.adfsAuthUrl.Query.Remove(0, 1)) + "]");
+                    //ub.Query = String.Format("{0}&wa=wsignin1.0&wtrealm=urn:federation:MicrosoftOnline", this.adfsAuthUrl.Query.Remove(0, 1)).
+                    //    Replace("&username=", String.Format("&username={0}", this.username));
+
+                    ub.Query = String.Format("{0}", this.adfsAuthUrl.Query.Remove(0, 1)).
                         Replace("&username=", String.Format("&username={0}", this.username));
 
                     this.adfsIntegratedAuthUrl = ub.Uri;
@@ -478,11 +482,11 @@ namespace Cookie365
                         samlST.Expires = DateTime.Parse(expires.FirstOrDefault().Value);
                     }
                 }
-                if (verbose) WriteLog("Retrieving STS Token...[OK]");
+                if (verbose) Console.WriteLine("Retrieving STS Token...[OK]");
             }
             catch (Exception e)
             {
-                WriteLog("Retrieving STS Token...[ERROR]:" + e.Message);
+                Console.WriteLine("Retrieving STS Token...[ERROR]:" + e.Message);
                 throw new Exception("Problems retrieving STS Token");
             }
             return samlST;
@@ -507,14 +511,6 @@ namespace Cookie365
             samlRTString = samlRTString.Replace("[toUrl]", toUrl);
 
             return samlRTString;
-        }
-
-        private void WriteLog(String message)
-        {
-            using (StreamWriter w = File.AppendText("C:\\programdata\\Ashby School\\Mapper.log"))
-            {
-                w.WriteLine("{0} {1} - {2}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString(), message);
-            }
         }
     }
 }

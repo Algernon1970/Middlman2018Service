@@ -102,6 +102,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Drives.vb" />
     <Compile Include="Password.xaml.vb">
       <DependentUpon>Password.xaml</DependentUpon>
     </Compile>

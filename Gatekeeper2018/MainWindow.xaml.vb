@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports System.IO
 Imports Hardcodet.Wpf.TaskbarNotification
 
 Class MainWindow
@@ -11,23 +12,29 @@ Class MainWindow
     Private Const WEB_IsPrivileged As String = "isprivuser"
     Private Const WEB_CopyPrivFile As String = "getpriv"
     Private Const WEB_SetPrivs As String = "setpriv"
+    Private Const WEB_GetGroups As String = "getusergroups"
 
     Private ReadOnly PrintMapper As New BackgroundWorker()
     Private ReadOnly PrivUserMapper As New BackgroundWorker()
     Private ReadOnly OneDriveMapper As New BackgroundWorker()
+    Private ReadOnly DriveMonitor As New BackgroundWorker()
 
     Private PasswordHandler As New Password
 
     Dim cid As Integer
     Dim online As Boolean = False
+    Dim monitoredDrives As String = "ZY"
+
     Private Sub GatekeeperMainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles GatekeeperMainWindow.Loaded
         Dim ret As String = ""
 
         Setup()
-            AddHandler PrintMapper.DoWork, AddressOf MapPrinters
-            AddHandler PrivUserMapper.DoWork, AddressOf HandlePrivUser
-            AddHandler OneDriveMapper.DoWork, AddressOf HandleOneDriveMapper
-            OneDriveMapper.RunWorkerAsync()
+        AddHandler PrintMapper.DoWork, AddressOf MapPrinters
+        AddHandler PrivUserMapper.DoWork, AddressOf HandlePrivUser
+        AddHandler OneDriveMapper.DoWork, AddressOf HandleOneDriveMapper
+        AddHandler DriveMonitor.DoWork, AddressOf HandleDriveMonitor
+        OneDriveMapper.RunWorkerAsync()
+        DriveMonitor.RunWorkerAsync()
 
         If online Then
             PrintMapper.RunWorkerAsync()
@@ -87,13 +94,53 @@ Class MainWindow
     End Sub
 
     Private Sub HandleOneDriveMapper(sender As Object, e As DoWorkEventArgs)
+        DoMapDrives()
+    End Sub
+
+    Private Sub DoMapDrives()
         MapZ()
         MapY()
-        MapV()
 
+        'Try
+        '    Dim glist As String = WebLoader.Request(WEB_URL & WEB_GetGroups)
+        '    If glist.ToLower.Contains("staff") Then
+        '        MapV()
+        '        monitoredDrives = monitoredDrives & "V"
+        '    End If
+        '    If glist.ToLower.Contains("slt") Then
+        '        MapS()
+        '        monitoredDrives = monitoredDrives & "S"
+        '    End If
+        'Catch ex As Exception
+
+        'End Try
+    End Sub
+
+    Private Sub HandleDriveMonitor(sender As Object, e As DoWorkEventArgs)
         While True
-            Threading.Thread.Sleep(10000)
+            MonitorDrives()
+            Threading.Thread.Sleep(2000)
         End While
+
+    End Sub
+
+    Private Sub MonitorDrives()
+        'Dim allDrives() As DriveInfo = DriveInfo.GetDrives
+        Dim rlist As String = ""
+        Dim drive As DriveInfo
+        For Each letter As Char In monitoredDrives
+            drive = New DriveInfo(letter)
+            If drive.IsReady Then
+                rlist = rlist & letter
+            End If
+        Next
+        If rlist.Length = monitoredDrives.Length Then
+            NotifyIcon.Icon = My.Resources.greencloud
+            NotifyIcon.HideBalloonTip()
+        Else
+            NotifyIcon.Icon = My.Resources.redcloud
+            NotifyIcon.ShowBalloonTip("Drive Mapper", "Not all drives mapped.", BalloonIcon.Error)
+        End If
     End Sub
 
     Private Sub MapZ()
@@ -105,24 +152,22 @@ Class MainWindow
 
     Private Sub MapY()
         Dim mapper As New AS365Cookie.Program
-        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
+        Dim username As String = "as\" & Environment.UserName
         Dim passwd As String = PasswordHandler.LoadPW
-        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-mount", "y:", "-map", "https://ashbyschool.sharepoint.com/StudentShared"})
+        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-m", "y~https://ashbyschool.sharepoint.com/StudentShared"})
     End Sub
 
-    Private Sub MapV()
-        Dim mapper As New AS365Cookie.Program
-        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
-        Dim passwd As String = PasswordHandler.LoadPW
-        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-mount", "v:", "-map", "https://ashbyschool.sharepoint.com/StaffShared"})
-    End Sub
+    'Private Sub MapV()
+    '    Dim username As String = "as\" & Environment.UserName
+    '    Dim passwd As String = PasswordHandler.LoadPW
+    '    Drives.MapDrive("V", "https://ashbyschool.sharepoint.com/StaffShared", username, passwd)
+    'End Sub
 
-    Private Sub MapS()
-        Dim mapper As New AS365Cookie.Program
-        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
-        Dim passwd As String = PasswordHandler.LoadPW
-        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-mount", "s:", "-map", "https://ashbyschool.sharepoint.com/SLT/SLTDocs"})
-    End Sub
+    'Private Sub MapS()
+    '    Dim username As String = "as\" & Environment.UserName
+    '    Dim passwd As String = PasswordHandler.LoadPW
+    '    Drives.MapDrive("S", "https://ashbyschool.sharepoint.com/SLT/SLTDocs", username, passwd)
+    'End Sub
 
     Private Function GetPrinterConnectionList() As List(Of Pinfo)
         Dim ret As String
@@ -151,6 +196,7 @@ Class MainWindow
 
     Private Sub MapDrivesButton_Click(sender As Object, e As RoutedEventArgs) Handles MapDrivesButton.Click
         DisplayBox.AppendText("Map Drives" & vbCrLf)
+        DoMapDrives()
     End Sub
 
     Private Sub PasswordButton_Click(sender As Object, e As RoutedEventArgs) Handles PasswordButton.Click

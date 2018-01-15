@@ -1,5 +1,5 @@
 ﻿/*  
-    (c) Copyright 2014-2015 Fabio Cuneaz 
+    (c) Copyright 2014-2017 Fabio Cuneaz 
 
     This file is part of Cookie365.
 
@@ -126,11 +126,10 @@ namespace Cookie365
                 }
             }
             var req = clientHandler == null ? new HttpClient() : new HttpClient(clientHandler as HttpMessageHandler);
-            req.Timeout = TimeSpan.FromMilliseconds(2000);
             var message = new HttpRequestMessage(method, uri);
             byte[] response;
 
-            req.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; Office365Int)");
+            req.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
             message.Headers.Add("Accept", contentType); // set the content type of the request
 
             if (requestContent != null && (method == HttpMethod.Post || method == HttpMethod.Put || method == HttpMethod.Delete))
@@ -158,12 +157,10 @@ namespace Cookie365
             }
 
             // Send the request and read the response as an array of bytes
-
-            var res = await req.SendAsync(message);
-
-
-            response = await res.Content.ReadAsByteArrayAsync();
-
+            using (var res = await req.SendAsync(message))
+            {
+                response = await res.Content.ReadAsByteArrayAsync();
+            }
 
             return response;
         }

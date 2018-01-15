@@ -1,5 +1,5 @@
 ﻿/*  
-    (c) Copyright 2014-2015 Fabio Cuneaz 
+    (c) Copyright 2014-2017 Fabio Cuneaz 
 
     This file is part of Cookie365.
 

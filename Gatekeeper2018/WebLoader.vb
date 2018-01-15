@@ -7,6 +7,12 @@ Module WebLoader
         If Not browser.Headers.ToString.Contains("ASHBYSCHOOL") Then
             browser.Headers.Add("x-ashbyauth", "ASHBYSCHOOL")
         End If
-        Return browser.DownloadString(url)
+        Dim ret As String = ""
+        Try
+            ret = browser.DownloadString(url)
+        Catch ex As Exception
+
+        End Try
+        Return ret
     End Function
 End Module

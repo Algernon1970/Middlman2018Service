@@ -5,6 +5,7 @@ Imports System.Security.Principal
 Imports AshbyTools
 Imports AshbyTools.murrayju.ProcessExtensions
 Imports Microsoft.Win32
+Imports System.DirectoryServices.AccountManagement
 
 Public Class CommandHandler
 
@@ -83,6 +84,20 @@ Public Class CommandHandler
         End If
         pid = pr.Rows(0).Field(Of Integer)("PersonID")
         Return pid.ToString
+    End Function
+
+    Public Function GetUserGroups() As String
+        Dim grpList As String = ""
+        Dim usr As UserPrincipal = getUserPrincipalbyUsername(userCTX, SharedData.currentUser)
+        Dim usrGrps As PrincipalSearchResult(Of Principal) = usr.GetGroups()
+        For Each grp As Principal In usrGrps
+            If grpList.Length > 0 Then
+                grpList = String.Format("{0},{1}", grpList, grp.Name)
+            Else
+                grpList = grp.Name
+            End If
+        Next
+        Return grpList
     End Function
 
     Private Function CreateUserRecord(ByVal sam As String) As DataTable

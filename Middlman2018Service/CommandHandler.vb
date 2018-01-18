@@ -159,9 +159,9 @@ Public Class CommandHandler
 
     Public Function GPUpdate() As String
         If Environment.Is64BitOperatingSystem Then
-            ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files (x86)\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities GPUPDATE", "C:\Program Files (x86)\Ashby School\MiddlemanInstaller", True)
+            ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files (x86)\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities GPUPDATE", "C:\Program Files (x86)\Ashby School\MiddlemanInstaller", False)
         Else
-            ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities GPUPDATE", "C:\Program Files\Ashby School\MiddlemanInstaller", True)
+            ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities GPUPDATE", "C:\Program Files\Ashby School\MiddlemanInstaller", False)
         End If
         Return "OK"
     End Function
@@ -169,9 +169,9 @@ Public Class CommandHandler
     Public Function HookGatekeeper(ByRef opt As String) As String
         Dim ret As String
         If opt.ToLower.Equals("on") Then
-            ret = WriteReg("hklm\software\microsoft\windows nt\currentversion\winlogin\shell=c:\program files (x86)\ashby school\gatekeeper2018.exe|String")
+            ret = WriteReg("hklm\software\microsoft\windows nt\currentversion\winlogon\shell=C:\Program Files (x86)\Ashby School\MiddlemanInstaller\gatekeeper2018.exe|String")
         Else
-            ret = WriteReg("hklm\software\microsoft\windows nt\currentversion\winlogin\shell=explorer.exe|String")
+            ret = WriteReg("hklm\software\microsoft\windows nt\currentversion\winlogon\shell=explorer.exe|String")
         End If
         Return ret
     End Function

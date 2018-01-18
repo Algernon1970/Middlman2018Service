@@ -161,7 +161,6 @@ namespace Cookie365
             {
                 response = await res.Content.ReadAsByteArrayAsync();
             }
-
             return response;
         }
     }

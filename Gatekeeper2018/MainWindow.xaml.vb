@@ -13,11 +13,15 @@ Class MainWindow
     Private Const WEB_CopyPrivFile As String = "getpriv"
     Private Const WEB_SetPrivs As String = "setpriv"
     Private Const WEB_GetGroups As String = "getusergroups"
+    Private Const WEB_UnHookGatekeeper As String = "hookgatekeeper&params=off"
+    Private Const WEB_HookGatekeeper As String = "hookgatekeeper&params=on"
+    Private Const WEB_GPUpdate As String = "GPUpdate"
 
     Private ReadOnly PrintMapper As New BackgroundWorker()
     Private ReadOnly PrivUserMapper As New BackgroundWorker()
     Private ReadOnly OneDriveMapper As New BackgroundWorker()
     Private ReadOnly DriveMonitor As New BackgroundWorker()
+    Private ReadOnly Explorer As New BackgroundWorker()
 
     Private PasswordHandler As New Password
 
@@ -33,6 +37,7 @@ Class MainWindow
         AddHandler PrivUserMapper.DoWork, AddressOf HandlePrivUser
         AddHandler OneDriveMapper.DoWork, AddressOf HandleOneDriveMapper
         AddHandler DriveMonitor.DoWork, AddressOf HandleDriveMonitor
+        AddHandler Explorer.DoWork, AddressOf HandleExplorerStart
         OneDriveMapper.RunWorkerAsync()
         DriveMonitor.RunWorkerAsync()
 
@@ -68,7 +73,8 @@ Class MainWindow
     End Sub
 
     Private Sub HandlePrivUser(sender As Object, e As DoWorkEventArgs)
-        Dim ret As String = WebLoader.Request(WEB_URL & WEB_IsPrivileged)
+        Dim ret As String = WebLoader.Request(WEB_URL & WEB_GPUpdate)
+        ret = WebLoader.Request(WEB_URL & WEB_IsPrivileged)
         If ret.Equals("True") Then
             If online Then WebLoader.Request(WEB_URL & WEB_CopyPrivFile)
             WebLoader.Request(WEB_URL & WEB_SetPrivs)
@@ -93,6 +99,12 @@ Class MainWindow
         Next
     End Sub
 
+#Region "Drives"
+    Private Sub MapDrivesButton_Click(sender As Object, e As RoutedEventArgs) Handles MapDrivesButton.Click
+        DisplayBox.AppendText("Map Drives" & vbCrLf)
+        DoMapDrives()
+    End Sub
+
     Private Sub HandleOneDriveMapper(sender As Object, e As DoWorkEventArgs)
         DoMapDrives()
     End Sub
@@ -101,19 +113,19 @@ Class MainWindow
         MapZ()
         MapY()
 
-        'Try
-        '    Dim glist As String = WebLoader.Request(WEB_URL & WEB_GetGroups)
-        '    If glist.ToLower.Contains("staff") Then
-        '        MapV()
-        '        monitoredDrives = monitoredDrives & "V"
-        '    End If
-        '    If glist.ToLower.Contains("slt") Then
-        '        MapS()
-        '        monitoredDrives = monitoredDrives & "S"
-        '    End If
-        'Catch ex As Exception
+        Try
+            Dim glist As String = WebLoader.Request(WEB_URL & WEB_GetGroups)
+            If glist.ToLower.Contains("staff") Then
+                MapV()
+                monitoredDrives = monitoredDrives & "V"
+            End If
+            If glist.ToLower.Contains("slt") Then
+                MapS()
+                monitoredDrives = monitoredDrives & "S"
+            End If
+        Catch ex As Exception
 
-        'End Try
+        End Try
     End Sub
 
     Private Sub HandleDriveMonitor(sender As Object, e As DoWorkEventArgs)
@@ -144,30 +156,105 @@ Class MainWindow
     End Sub
 
     Private Sub MapZ()
-        Dim mapper As New AS365Cookie.Program
+        Dim outline As String = ""
+        Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
         Dim passwd As String = PasswordHandler.LoadPW
-        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-mount", "z:", "-homedir"})
+        p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        p.UseShellExecute = False
+        p.RedirectStandardOutput = True
+        p.RedirectStandardError = True
+        p.CreateNoWindow = True
+        p.Arguments = String.Format("-s https://ashbyschool-my.sharepoint.com -u {0} -p {1} mount z: -homedir", username, passwd)
+        Dim Cookie As New Process With {
+            .StartInfo = p
+        }
+        Cookie.Start()
+        Dim worked As Boolean = Cookie.WaitForExit(30000)
+        outline = Cookie.StandardOutput.ReadToEnd
+        Dim err As String = Cookie.StandardError.ReadToEnd
+        If Not worked Then
+            Dim arse As Boolean = True
+            'fucked
+        End If
+        DoMap(New Uri("https://ashbyschool-my.sharepoint.com"), "z:", username, passwd, True)
     End Sub
 
     Private Sub MapY()
-        Dim mapper As New AS365Cookie.Program
-        Dim username As String = "as\" & Environment.UserName
+        Dim p As New ProcessStartInfo
+        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
         Dim passwd As String = PasswordHandler.LoadPW
-        mapper.GetCookie365({"-s", "https://ashbyschool-my.sharepoint.com", "-u", username, "-p", passwd, "-m", "y~https://ashbyschool.sharepoint.com/StudentShared"})
+        p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        p.WindowStyle = ProcessWindowStyle.Hidden
+        p.Arguments = String.Format("-s https://ashbyschool.sharepoint.com/StudentShared -u {0} -p {1} -mount y:", username, passwd)
+        Dim Cookie As Process = Process.Start(p)
+        Dim worked As Boolean = Cookie.WaitForExit(30000)
+        If Not worked Then
+            Dim arse As Boolean = True
+            'fucked
+        End If
+        DoMap(New Uri("https://ashbyschool.sharepoint.com/StudentShared"), "y:", username, passwd, False)
     End Sub
 
-    'Private Sub MapV()
-    '    Dim username As String = "as\" & Environment.UserName
-    '    Dim passwd As String = PasswordHandler.LoadPW
-    '    Drives.MapDrive("V", "https://ashbyschool.sharepoint.com/StaffShared", username, passwd)
-    'End Sub
+    Private Sub MapV()
+        Dim p As New ProcessStartInfo
+        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
+        Dim passwd As String = PasswordHandler.LoadPW
+        p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        p.WindowStyle = ProcessWindowStyle.Hidden
+        p.Arguments = String.Format("-s https://ashbyschool.sharepoint.com/StaffShared -u {0} -p {1} -mount v:", username, passwd)
+        Dim Cookie As Process = Process.Start(p)
+        Dim worked As Boolean = Cookie.WaitForExit(30000)
+        If Not worked Then
+            Dim arse As Boolean = True
+            'fucked
+        End If
+        DoMap(New Uri("https://ashbyschool.sharepoint.com/StaffShared"), "v:", username, passwd, False)
+    End Sub
 
-    'Private Sub MapS()
-    '    Dim username As String = "as\" & Environment.UserName
-    '    Dim passwd As String = PasswordHandler.LoadPW
-    '    Drives.MapDrive("S", "https://ashbyschool.sharepoint.com/SLT/SLTDocs", username, passwd)
-    'End Sub
+    Private Sub MapS()
+        Dim p As New ProcessStartInfo
+        Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
+        Dim passwd As String = PasswordHandler.LoadPW
+        p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        p.WindowStyle = ProcessWindowStyle.Hidden
+        p.Arguments = String.Format("-s https://ashbyschool.sharepoint.com/SLT/SLTDocs -u {0} -p {1} -mount s:", username, passwd)
+        Dim Cookie As Process = Process.Start(p)
+        Dim worked As Boolean = Cookie.WaitForExit(30000)
+        If Not worked Then
+            Dim arse As Boolean = True
+            'fucked
+        End If
+        DoMap(New Uri("https://ashbyschool.sharepoint.com/SLT/SLTDocs"), "s:", username, passwd, False)
+    End Sub
+
+    Private Sub DoMap(sharepointUri As Uri, disk As String, username As String, passwd As String, mount As Boolean)
+        Dim homedir As String = ""
+        If mount Then
+            Dim user As String = username.Split(CType("@", Char()))(0)
+            Dim domain As String = username.Split(CType("@", Char()))(1)
+            homedir = "DavWWWRoot\\personal\\" + user + "_" + domain.Split(CType(".", Char()))(0) + "_" + domain.Split(CType(".", Char()))(1) + "_" + domain.Split(CType(".", Char()))(2) + "\\Documents"
+        End If
+
+
+        Dim cmdArgs As String = "/c net use " + disk + " \\\\" + sharepointUri.Host + "@ssl" + sharepointUri.PathAndQuery.Replace("/", "\\") + homedir
+        cmdArgs = cmdArgs.Replace("\\", "\")
+
+        Dim Process As Process = New System.Diagnostics.Process()
+        Process.StartInfo = New System.Diagnostics.ProcessStartInfo("cmd", cmdArgs)
+        Process.StartInfo.CreateNoWindow = True
+        Process.StartInfo.RedirectStandardOutput = True
+        Process.StartInfo.RedirectStandardError = True
+        Process.StartInfo.UseShellExecute = False
+        'Process.StartInfo.CreateNoWindow = true
+        Process.Start()
+
+        Process.WaitForExit()
+        Dim err As String = Process.StandardError.ReadToEnd
+        Dim output As String = Process.StandardOutput.ReadToEnd()
+        Console.WriteLine(output)
+    End Sub
+#End Region
 
     Private Function GetPrinterConnectionList() As List(Of Pinfo)
         Dim ret As String
@@ -194,11 +281,6 @@ Class MainWindow
         Return plist
     End Function
 
-    Private Sub MapDrivesButton_Click(sender As Object, e As RoutedEventArgs) Handles MapDrivesButton.Click
-        DisplayBox.AppendText("Map Drives" & vbCrLf)
-        DoMapDrives()
-    End Sub
-
     Private Sub PasswordButton_Click(sender As Object, e As RoutedEventArgs) Handles PasswordButton.Click
         PasswordHandler.ShowDialog()
 
@@ -213,6 +295,21 @@ Class MainWindow
     Private Sub GatekeeperMainWindow_Closed(sender As Object, e As EventArgs) Handles GatekeeperMainWindow.Closed
 
     End Sub
+
+    Private Sub AcceptButton_Click(sender As Object, e As RoutedEventArgs) Handles AcceptButton.Click
+        Me.Visibility = Visibility.Hidden
+        Explorer.RunWorkerAsync()
+    End Sub
+
+    Private Sub HandleExplorerStart(sender As Object, e As DoWorkEventArgs)
+        Dim ret As String = ""
+        ret = WebLoader.Request(WEB_URL & WEB_UnHookGatekeeper)
+        Threading.Thread.Sleep(1000)
+        Process.Start("C:\windows\explorer.exe")
+        Threading.Thread.Sleep(5000)
+        ret = WebLoader.Request(WEB_URL & WEB_HookGatekeeper)
+    End Sub
+
 End Class
 
 Structure Pinfo

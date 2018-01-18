@@ -9,15 +9,15 @@ using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using Cookie365;
 
-namespace AS365Cookie
+namespace Cookie365
 {
-    public class Program
+    class Program
     {
         // Import DLL to set Cookies in IE
         [DllImport("wininet.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern bool InternetSetCookie(string lpszUrlName, string lpszCookieName, string lpszCookieData);
 
-        public void GetCookie365(string[] args)
+        static void Main(string[] args)
         {
             // Set Default Argument values
             bool quiet = false;
@@ -124,7 +124,7 @@ namespace AS365Cookie
 
                                 if (InternetSetCookie(baseUrl, null, cookies["FedAuth"].ToString() + "; Expires = " + cookies["FedAuth"].Expires.AddMinutes(expire).ToString("R")))
                                 {
-                                    if (InternetSetCookie(baseUrl, null, cookies["rtFA"].ToString() + "; Expires = " + cookies["rtFA"].Expires.AddMinutes(expire).ToString("R"))) ;
+                                    if (InternetSetCookie(baseUrl, null, cookies["rtFA"].ToString() + "; Expires = " + cookies["rtFA"].Expires.AddMinutes(expire).ToString("R"))) 
                                     {
                                         if (!quiet)
                                         {
@@ -140,6 +140,7 @@ namespace AS365Cookie
                                                 Process.StartInfo = new System.Diagnostics.ProcessStartInfo("cmd", cmdArgs);
                                                 Process.StartInfo.RedirectStandardOutput = true;
                                                 Process.StartInfo.UseShellExecute = false;
+                                                //Process.StartInfo.CreateNoWindow = true;
                                                 Process.Start();
                                                 Process.WaitForExit();
                                                 String output = Process.StandardOutput.ReadToEnd();
@@ -171,7 +172,7 @@ namespace AS365Cookie
             if (CommandLine["m"] != null)
             {
                 //String username = System.DirectoryServices.AccountManagement.UserPrincipal.Current.UserPrincipalName;
-                String username = Environment.UserName + "@ashbyschool.org.uk";
+                String username = Environment.UserName;  //+ "@ashbyschool.org.uk";
                 String password = CommandLine["p"];
 
                 //if (username != null) { if (CommandLine["d"] != null) username = username.Split('@')[0] + "@" + CommandLine["d"]; }
@@ -202,22 +203,26 @@ namespace AS365Cookie
                     DoMap(quiet, sharepointUri, drive, "");
                 }
             }
+            
         }
 
         private static void DoMap(bool quiet, Uri sharepointUri, string disk, string homedir)
         {
             String cmdArgs = "/c net use " + disk + " \\\\" + sharepointUri.Host + "@ssl" + sharepointUri.PathAndQuery.Replace("/", "\\") + homedir;
+            cmdArgs = cmdArgs.Replace("\\\\", "\\");
             // Uncomment to make drives persist
             // cmdArgs = String.Format("{0} /PERSISTENT:YES", cmdArgs); 
             System.Diagnostics.Process Process = new System.Diagnostics.Process();
             Process.StartInfo = new System.Diagnostics.ProcessStartInfo("cmd", cmdArgs);
             Process.StartInfo.CreateNoWindow = true;
             Process.StartInfo.RedirectStandardOutput = true;
+            Process.StartInfo.RedirectStandardError = true;
             Process.StartInfo.UseShellExecute = false;
+            //Process.StartInfo.CreateNoWindow = true;
             Process.Start();
             Process.WaitForExit();
-            String output = Process.StandardOutput.ReadToEnd();
-
+            String output = Process.StandardError.ReadToEnd();
+            Console.WriteLine(output);
         }
 
         static async Task RunAsync(Uri sharepointUri, string username, string password, bool useIntegratedAuth, bool verbose, bool debug)

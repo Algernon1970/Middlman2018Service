@@ -13,4 +13,9 @@ Public Class ProjectInstaller
 
     End Sub
 
+    Private Sub ServiceProcessInstaller1_AfterInstall(sender As Object, e As InstallEventArgs) Handles ServiceProcessInstaller1.AfterInstall
+        If Not EventLog.SourceExists("GK2018") Then
+            EventLog.CreateEventSource("GK2018", "GK2018")
+        End If
+    End Sub
 End Class

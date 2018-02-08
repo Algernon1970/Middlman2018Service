@@ -52,6 +52,10 @@ Public Class WebServer
 
         Catch ex As Exception
             Return "Failed to call " & c.Request.QueryString("command")
+            Dim eLog As EventLog = GetLogger()
+            If eLog IsNot Nothing Then
+                eLog.WriteEntry(String.Format("HandleCommands {0}: Failed {1}", c.Request.QueryString("command"), ex.Message))
+            End If
         End Try
     End Function
 

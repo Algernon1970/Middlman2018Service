@@ -28,13 +28,14 @@ ByVal lpUserName As String, ByVal dwFlags As Integer) As Integer
 
         Dim nr As NETRESOURCE
 
-        nr = New NETRESOURCE
-        nr.lpRemoteName = UNCPath
-        nr.lpLocalName = DriveLetter & ":"
-        nr.dwType = RESOURCETYPE_DISK
+        nr = New NETRESOURCE With {
+            .lpRemoteName = UNCPath,
+            .lpLocalName = DriveLetter & ":",
+            .dwType = RESOURCETYPE_DISK
+        }
 
         Dim result As Integer
-        result = WNetAddConnection2(nr, user, pass, 0)
+        result = WNetAddConnection2(nr, user, pass, 4)
 
         If result = 0 Then
             Return True

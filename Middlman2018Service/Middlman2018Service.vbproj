@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandHandler.vb" />
+    <Compile Include="FilePermissions.vb" />
     <Compile Include="ModShell.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

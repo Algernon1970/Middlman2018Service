@@ -7,14 +7,14 @@ Module PrinterMapper
     Declare Function GetDefaultPrinter Lib "winspool.drv" Alias "GetDefaultPrinterA" (ByVal pszBuffer() As String, ByVal pcchBuffer As Integer) As Boolean
 
     Public Function MapPrinter(ByVal connectionString As String) As String
-        Dim ret As String = "Failed to map " & connectionString
+        Dim ret As String = "KO"
         For retries = 0 To 5
             If AddPrinterConnection(connectionString) <> 0 Then
                 ret = "OK"
                 Exit For
             End If
             Threading.Thread.Sleep(1000)
-
+            ret = Err.LastDllError.ToString
         Next
         Return ret
     End Function

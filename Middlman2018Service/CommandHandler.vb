@@ -6,8 +6,16 @@ Imports AshbyTools
 Imports AshbyTools.murrayju.ProcessExtensions
 Imports Microsoft.Win32
 Imports System.DirectoryServices.AccountManagement
+Imports System.ServiceProcess
 
 Public Class CommandHandler
+
+    Dim eLog As EventLog = GetLogger()
+    Private Sub WriteLog(ByRef message As String, ByRef type As EventLogEntryType)
+        If eLog IsNot Nothing Then
+            eLog.WriteEntry(message, type)
+        End If
+    End Sub
 
     Public Function GetVersion() As String
         Return "Version 2018.2"
@@ -51,6 +59,7 @@ Public Class CommandHandler
         Else
             success = ProcessExtensions.StartProcessAsCurrentUser(cmdline)
         End If
+        WriteLog(String.Format("Execute: {0}", cmdline), EventLogEntryType.Warning)
         Return If(success, "Succeeded", "Failed")
     End Function
 
@@ -60,6 +69,7 @@ Public Class CommandHandler
 
     Public Function RecheckOnline() As String
         Dim ret As String = AmIOnDomain()
+        WriteLog(String.Format("RecheckOnline: {0}", ret), EventLogEntryType.Information)
         Return If(ret = "Offline", "Offline", "Online")
     End Function
 
@@ -181,7 +191,16 @@ Public Class CommandHandler
     ''' </summary>
     ''' <returns>Yes/No</returns>
     Public Function Gotz() As String
-        Return "YES"
+        If SharedData.mappedDrives.ToUpper.Contains("Z") Then
+            Return "GOTZ"
+        Else
+            Return "NOTZ"
+        End If
+    End Function
+
+    Public Function RecordDrives(ByRef driveList As String)
+        SharedData.mappedDrives = driveList
+        Return "OK"
     End Function
 
     Public Function ReadReg(ByRef path As String) As String
@@ -250,8 +269,10 @@ Public Class CommandHandler
             LCLGRP.CommitChanges()
             LCLGRP.Close()
         Catch ex As Exception
+            WriteLog(String.Format("LocalAdmin: {0}", ex.Message), EventLogEntryType.Error)
             Return "Error - " & ex.Message
         End Try
+        WriteLog(String.Format("LocalAdmin: {0}", param), EventLogEntryType.SuccessAudit)
         Return "OK"
     End Function
 
@@ -275,17 +296,39 @@ Public Class CommandHandler
         If tbl.Rows.Count > 0 Then
             Dim row As DataRow = tbl.Rows(0)
             Dim dataItem As Byte() = row.Field(Of Byte())("Data")
-            Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) & "\Ashby School\privsfile.txt"
+            Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) & "\Ashby School\privsfile.txt"
             Using fs As New FileStream(path, FileMode.Create)
                 fs.Write(dataItem, 0, dataItem.Length)
             End Using
             Return True
+            FilePermissions.GrantEveroneReadAccess(path)
         End If
         Return False
     End Function
 
+    Public Function GetMOTD() As String
+        Try
+            Dim FileTable As New ZuulDataSetTableAdapters.Tbl_FilesTableAdapter
+            Dim tbl As DataTable = FileTable.GetDataByTitle("MOTD")
+            If tbl.Rows.Count > 0 Then
+                Dim row As DataRow = tbl.Rows(0)
+                Dim dataItem As Byte() = row.Field(Of Byte())("Data")
+                Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) & "\Ashby School\motd.rtf"
+                Using fs As New FileStream(path, FileMode.Create)
+                    fs.Write(dataItem, 0, dataItem.Length)
+                End Using
+                FilePermissions.GrantEveroneReadAccess(path)
+                Return True
+            End If
+        Catch ex As Exception
+            WriteLog(String.Format("GetMOTD: {0}", ex.Message), EventLogEntryType.Error)
+        End Try
+
+        Return False
+    End Function
+
     Public Function SetPriv() As String
-        Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) & "\Ashby School\privsfile.txt"
+        Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) & "\Ashby School\privsfile.txt"
         Dim line As String = ""
         Dim regvalue As String = ""
         Dim op As RegInfo = New RegInfo
@@ -329,6 +372,7 @@ Public Class CommandHandler
                                 op.type = RegistryValueKind.String
 
                             Case Else
+                                WriteLog(String.Format("SetPriv: ParseValueObject - unknown type {0}", op.value), EventLogEntryType.Error)
                                 Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Error ParseValueObject - unknown type " & op.value)
                         End Select
                     End If
@@ -350,6 +394,16 @@ Public Class CommandHandler
             RegEdit.WriteReg(op)
         End If
     End Sub
+
+    Public Function FOAD(ByRef passwd As String)
+        WriteLog("FOAD", EventLogEntryType.Warning)
+        If passwd.ToLower.Equals("diediedie") Then
+            WriteLog("KILLING", EventLogEntryType.Warning)
+            Dim service As ServiceController = New ServiceController("Middleman2018")
+            service.Stop()
+        End If
+        Return "Shucks"
+    End Function
 
 End Class
 

@@ -16,6 +16,8 @@ Class MainWindow
     Private Const WEB_UnHookGatekeeper As String = "hookgatekeeper&params=off"
     Private Const WEB_HookGatekeeper As String = "hookgatekeeper&params=on"
     Private Const WEB_GPUpdate As String = "GPUpdate"
+    Private Const WEB_CopyMOTD As String = "GetMOTD"
+    Private Const WEB_RecordDrives As String = "RecordDrives&params="
 
     Private ReadOnly PrintMapper As New BackgroundWorker()
     Private ReadOnly PrivUserMapper As New BackgroundWorker()
@@ -24,6 +26,8 @@ Class MainWindow
     Private ReadOnly Explorer As New BackgroundWorker()
 
     Private PasswordHandler As New Password
+    Private logging As Boolean = False
+    Private log As New EventLog
 
     Dim cid As Integer
     Dim online As Boolean = False
@@ -48,14 +52,28 @@ Class MainWindow
     End Sub
 
     Private Sub Setup()
+        Try
+            If Not EventLog.SourceExists("GK2018") Then
+                EventLog.CreateEventSource("GK2018", "GK2018")
+                log.Source = "GK2018"
+            Else
+                logging = True
+                log.Source = "GK2018"
+            End If
+        Catch ex As Exception
+            logging = False
+        End Try
+
         NotifyIcon.Icon = My.Resources.whitecloud
         Dim pwdString As String = "none"
         Try
             pwdString = PasswordHandler.LoadPW
             If Not PasswordHandler.CheckPW(pwdString) Then
+                PasswordHandler.WindowStartupLocation = WindowStartupLocation.CenterScreen
                 PasswordHandler.ShowDialog()
             End If
         Catch ex As Exception
+            PasswordHandler.WindowStartupLocation = WindowStartupLocation.CenterScreen
             PasswordHandler.ShowDialog()
         End Try
         Dim ret As String = ""
@@ -63,11 +81,25 @@ Class MainWindow
             ret = WebLoader.Request(WEB_URL & WEB_SetName & Environment.UserName)
             ret = WebLoader.Request(WEB_URL & WEB_CheckOnline)
             statusLabel.Content = ret
-            If ret.ToLower.Equals("online") Then online = True
-            ret = WebLoader.Request(WEB_URL & WEB_GetComputerID)
+            If ret.ToLower.Equals("online") Then
+                online = True
+                ret = WebLoader.Request(WEB_URL & WEB_GetComputerID)
+                ret = WebLoader.Request(WEB_URL & WEB_CopyMOTD)
+            End If
+            Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) & "\Ashby School\motd.rtf"
+            If File.Exists(path) Then
+                Dim range As TextRange
+                range = New TextRange(DisplayBox.Document.ContentStart, DisplayBox.Document.ContentEnd)
+                Using fstream As New FileStream(path, FileMode.Open)
+                    range.Load(fstream, DataFormats.Rtf)
+                End Using
+            End If
         Catch ex As Exception
             DisplayBox.AppendText("Middleman not available. Contact Network Services." & vbCrLf)
             DisplayBox.Background = Brushes.Red
+            If logging Then
+                log.WriteEntry("SETUP: " & ex.Message, EventLogEntryType.Error)
+            End If
         End Try
 
     End Sub
@@ -80,48 +112,42 @@ Class MainWindow
             WebLoader.Request(WEB_URL & WEB_SetPrivs)
 
             Dim priv As Boolean = True
+            log.WriteEntry("HandlePrivUser: Privileged", EventLogEntryType.Information)
         Else
             Dim priv As Boolean = False
+            log.WriteEntry("HandlePrivUser: Not Privileged", EventLogEntryType.Information)
         End If
     End Sub
 
-    Private Sub MapPrinters(sender As Object, e As DoWorkEventArgs)
-        Dim plist As List(Of Pinfo) = GetPrinterConnectionList()
-        Dim res As String
-        For Each printer As Pinfo In plist
-            If printer.isDefault Then
-                res = PrinterMapper.MapPrinter(printer.connectionString)
-                PrinterMapper.SetDefaultPrinter(printer.connectionString)
-            Else
-                res = PrinterMapper.MapPrinter(printer.connectionString)
-            End If
-
-        Next
-    End Sub
 
 #Region "Drives"
     Private Sub MapDrivesButton_Click(sender As Object, e As RoutedEventArgs) Handles MapDrivesButton.Click
-        DisplayBox.AppendText("Map Drives" & vbCrLf)
+        log.WriteEntry("MapDrives: Manual selected", EventLogEntryType.Information)
         DoMapDrives()
     End Sub
 
     Private Sub HandleOneDriveMapper(sender As Object, e As DoWorkEventArgs)
+        log.WriteEntry("MapDrivesButton: Autorun", EventLogEntryType.Information)
         DoMapDrives()
     End Sub
 
     Private Sub DoMapDrives()
         MapZ()
+        log.WriteEntry("DoMapDrives: Map Z", EventLogEntryType.Information)
         MapY()
+        log.WriteEntry("DoMapDrives: Map Y", EventLogEntryType.Information)
 
         Try
             Dim glist As String = WebLoader.Request(WEB_URL & WEB_GetGroups)
             If glist.ToLower.Contains("staff") Then
                 MapV()
                 monitoredDrives = monitoredDrives & "V"
+                log.WriteEntry("DoMapDrives: Map V", EventLogEntryType.Information)
             End If
             If glist.ToLower.Contains("slt") Then
                 MapS()
                 monitoredDrives = monitoredDrives & "S"
+                log.WriteEntry("DoMapDrives: Map S", EventLogEntryType.Information)
             End If
         Catch ex As Exception
 
@@ -137,15 +163,22 @@ Class MainWindow
     End Sub
 
     Private Sub MonitorDrives()
-        'Dim allDrives() As DriveInfo = DriveInfo.GetDrives
         Dim rlist As String = ""
         Dim drive As DriveInfo
         For Each letter As Char In monitoredDrives
             drive = New DriveInfo(letter)
             If drive.IsReady Then
                 rlist = rlist & letter
+            Else
+                Try
+                    Dim flist = Directory.EnumerateFiles(letter & ":")
+                Catch ex As Exception
+
+                End Try
+
             End If
         Next
+        WebLoader.Request(WEB_URL & WEB_RecordDrives & rlist)
         If rlist.Length = monitoredDrives.Length Then
             NotifyIcon.Icon = My.Resources.greencloud
             NotifyIcon.HideBalloonTip()
@@ -173,9 +206,8 @@ Class MainWindow
         Dim worked As Boolean = Cookie.WaitForExit(30000)
         outline = Cookie.StandardOutput.ReadToEnd
         Dim err As String = Cookie.StandardError.ReadToEnd
-        If Not worked Then
-            Dim arse As Boolean = True
-            'fucked
+        If (Not worked) And logging Then
+            log.WriteEntry("MAPZ: " & err, EventLogEntryType.Warning)
         End If
         DoMap(New Uri("https://ashbyschool-my.sharepoint.com"), "z:", username, passwd, True)
     End Sub
@@ -186,12 +218,17 @@ Class MainWindow
         Dim passwd As String = PasswordHandler.LoadPW
         p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
         p.WindowStyle = ProcessWindowStyle.Hidden
+        p.UseShellExecute = False
+        p.RedirectStandardOutput = True
+        p.RedirectStandardError = True
+        p.CreateNoWindow = True
         p.Arguments = String.Format("-s https://ashbyschool.sharepoint.com/StudentShared -u {0} -p {1} -mount y:", username, passwd)
         Dim Cookie As Process = Process.Start(p)
         Dim worked As Boolean = Cookie.WaitForExit(30000)
-        If Not worked Then
-            Dim arse As Boolean = True
-            'fucked
+        Dim outline As String = Cookie.StandardOutput.ReadToEnd
+        Dim err As String = Cookie.StandardError.ReadToEnd
+        If (Not worked) And logging Then
+            log.WriteEntry("MAPY: " & err, EventLogEntryType.Warning)
         End If
         DoMap(New Uri("https://ashbyschool.sharepoint.com/StudentShared"), "y:", username, passwd, False)
     End Sub
@@ -202,12 +239,17 @@ Class MainWindow
         Dim passwd As String = PasswordHandler.LoadPW
         p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
         p.WindowStyle = ProcessWindowStyle.Hidden
+        p.UseShellExecute = False
+        p.RedirectStandardOutput = True
+        p.RedirectStandardError = True
+        p.CreateNoWindow = True
         p.Arguments = String.Format("-s https://ashbyschool.sharepoint.com/StaffShared -u {0} -p {1} -mount v:", username, passwd)
         Dim Cookie As Process = Process.Start(p)
         Dim worked As Boolean = Cookie.WaitForExit(30000)
-        If Not worked Then
-            Dim arse As Boolean = True
-            'fucked
+        Dim outline As String = Cookie.StandardOutput.ReadToEnd
+        Dim err As String = Cookie.StandardError.ReadToEnd
+        If (Not worked) And logging Then
+            log.WriteEntry("MAPV: " & err, EventLogEntryType.Warning)
         End If
         DoMap(New Uri("https://ashbyschool.sharepoint.com/StaffShared"), "v:", username, passwd, False)
     End Sub
@@ -218,12 +260,17 @@ Class MainWindow
         Dim passwd As String = PasswordHandler.LoadPW
         p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
         p.WindowStyle = ProcessWindowStyle.Hidden
+        p.UseShellExecute = False
+        p.RedirectStandardOutput = True
+        p.RedirectStandardError = True
+        p.CreateNoWindow = True
         p.Arguments = String.Format("-s https://ashbyschool.sharepoint.com/SLT/SLTDocs -u {0} -p {1} -mount s:", username, passwd)
         Dim Cookie As Process = Process.Start(p)
         Dim worked As Boolean = Cookie.WaitForExit(30000)
-        If Not worked Then
-            Dim arse As Boolean = True
-            'fucked
+        Dim outline As String = Cookie.StandardOutput.ReadToEnd
+        Dim err As String = Cookie.StandardError.ReadToEnd
+        If (Not worked) And logging Then
+            log.WriteEntry("MAPS: " & err, EventLogEntryType.Warning)
         End If
         DoMap(New Uri("https://ashbyschool.sharepoint.com/SLT/SLTDocs"), "s:", username, passwd, False)
     End Sub
@@ -241,20 +288,51 @@ Class MainWindow
         cmdArgs = cmdArgs.Replace("\\", "\")
 
         Dim Process As Process = New System.Diagnostics.Process()
-        Process.StartInfo = New System.Diagnostics.ProcessStartInfo("cmd", cmdArgs)
-        Process.StartInfo.CreateNoWindow = True
-        Process.StartInfo.RedirectStandardOutput = True
-        Process.StartInfo.RedirectStandardError = True
-        Process.StartInfo.UseShellExecute = False
-        'Process.StartInfo.CreateNoWindow = true
+        Process.StartInfo = New System.Diagnostics.ProcessStartInfo("cmd", cmdArgs) With {
+            .CreateNoWindow = True,
+            .RedirectStandardOutput = True,
+            .RedirectStandardError = True,
+            .UseShellExecute = False
+        }
         Process.Start()
 
         Process.WaitForExit()
+
         Dim err As String = Process.StandardError.ReadToEnd
         Dim output As String = Process.StandardOutput.ReadToEnd()
+        If logging Then
+            log.WriteEntry("DoMap:Output: " & output, EventLogEntryType.Information)
+            log.WriteEntry("DoMap:Error: " & err, EventLogEntryType.Information)
+        End If
         Console.WriteLine(output)
     End Sub
 #End Region
+
+#Region "Printers"
+    Private Sub MapPrinters(sender As Object, e As DoWorkEventArgs)
+        Dim plist As List(Of Pinfo) = GetPrinterConnectionList()
+        Dim res As String
+        For Each printer As Pinfo In plist
+            If printer.isDefault Then
+                res = PrinterMapper.MapPrinter(printer.connectionString)
+                PrinterMapper.SetDefaultPrinter(printer.connectionString)
+                If Not res.Equals("OK") Then
+                    log.WriteEntry(String.Format("MapPrinters: Default {0} - {1}", printer.connectionString, res), EventLogEntryType.FailureAudit)
+                Else
+                    log.WriteEntry("MapPrinters: Default " & printer.connectionString, EventLogEntryType.SuccessAudit)
+                End If
+
+            Else
+                res = PrinterMapper.MapPrinter(printer.connectionString)
+                If Not res.Equals("OK") Then
+                    log.WriteEntry(String.Format("MapPrinters: {0} - {1}", printer.connectionString, res), EventLogEntryType.FailureAudit)
+                Else
+                    log.WriteEntry("MapPrinters:  " & printer.connectionString, EventLogEntryType.SuccessAudit)
+                End If
+            End If
+
+        Next
+    End Sub
 
     Private Function GetPrinterConnectionList() As List(Of Pinfo)
         Dim ret As String
@@ -280,15 +358,17 @@ Class MainWindow
         Next
         Return plist
     End Function
+#End Region
 
     Private Sub PasswordButton_Click(sender As Object, e As RoutedEventArgs) Handles PasswordButton.Click
+        PasswordHandler.WindowStartupLocation = WindowStartupLocation.CenterScreen
         PasswordHandler.ShowDialog()
 
         If PasswordHandler.Status Then
-            DisplayBox.AppendText(vbCrLf & "Got PW " & PasswordHandler.LoadPW & vbCrLf)
-            NotifyIcon.Icon = My.Resources.greencloud
+
+            log.WriteEntry("PasswordHandler: Correct Password stored", EventLogEntryType.SuccessAudit)
         Else
-            NotifyIcon.Icon = My.Resources.redcloud
+            log.WriteEntry("PasswordHandler: Password not validated", EventLogEntryType.FailureAudit)
         End If
     End Sub
 
@@ -306,6 +386,7 @@ Class MainWindow
         ret = WebLoader.Request(WEB_URL & WEB_UnHookGatekeeper)
         Threading.Thread.Sleep(1000)
         Process.Start("C:\windows\explorer.exe")
+        log.WriteEntry("Starting Explorer", EventLogEntryType.Information)
         Threading.Thread.Sleep(5000)
         ret = WebLoader.Request(WEB_URL & WEB_HookGatekeeper)
     End Sub

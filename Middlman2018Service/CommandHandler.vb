@@ -272,7 +272,7 @@ Public Class CommandHandler
             WriteLog(String.Format("LocalAdmin: {0}", ex.Message), EventLogEntryType.Error)
             Return "Error - " & ex.Message
         End Try
-        WriteLog(String.Format("LocalAdmin: {0}", param), EventLogEntryType.SuccessAudit)
+        WriteLog(String.Format("LocalAdmin: {0}", username), EventLogEntryType.SuccessAudit)
         Return "OK"
     End Function
 
@@ -348,6 +348,7 @@ Public Class CommandHandler
                                 op.value = System.Text.Encoding.Unicode.GetBytes(regvalue)
                             Case RegistryValueKind.DWord
                                 regvalue = regvalue.Substring(2).TrimStart("0")
+                                If regvalue.Equals("") Then regvalue = "0"
                                 op.value = Convert.ToInt32(regvalue, 16)
                             Case RegistryValueKind.String
                                 op.value = regvalue

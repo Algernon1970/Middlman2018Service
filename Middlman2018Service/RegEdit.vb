@@ -72,9 +72,9 @@ Module RegEdit
                 Return reg
             End If
         Catch ex As Exception
-            Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, ex.Message)
+            ' Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, ex.Message)
         End Try
-
+        Return reg
     End Function
 
     Public Function DeleteRegKey(ByRef reg As RegInfo) As RegInfo

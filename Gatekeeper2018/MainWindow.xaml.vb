@@ -18,6 +18,7 @@ Class MainWindow
     Private Const WEB_GPUpdate As String = "GPUpdate"
     Private Const WEB_CopyMOTD As String = "GetMOTD"
     Private Const WEB_RecordDrives As String = "RecordDrives&params="
+    Private Const WEB_LocalAdmin As String = "LocalAdmin&params="
 
     Private ReadOnly PrintMapper As New BackgroundWorker()
     Private ReadOnly PrivUserMapper As New BackgroundWorker()
@@ -109,12 +110,14 @@ Class MainWindow
         ret = WebLoader.Request(WEB_URL & WEB_IsPrivileged)
         If ret.Equals("True") Then
             If online Then WebLoader.Request(WEB_URL & WEB_CopyPrivFile)
+            WebLoader.Request(WEB_URL & WEB_LocalAdmin & "add")
             WebLoader.Request(WEB_URL & WEB_SetPrivs)
 
             Dim priv As Boolean = True
             log.WriteEntry("HandlePrivUser: Privileged", EventLogEntryType.Information)
         Else
             Dim priv As Boolean = False
+            WebLoader.Request(WEB_URL & WEB_LocalAdmin & "remove")
             log.WriteEntry("HandlePrivUser: Not Privileged", EventLogEntryType.Information)
         End If
     End Sub

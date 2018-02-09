@@ -359,10 +359,8 @@ Public Class CommandHandler
                         Select Case regtype.ToLower
                             Case "binary"
                                 op.type = RegistryValueKind.Binary
-
                             Case "reg_dword"
                                 op.type = RegistryValueKind.DWord
-
                             Case "expandstring"
                                 op.type = RegistryValueKind.ExpandString
                                 op.value = regvalue
@@ -388,11 +386,29 @@ Public Class CommandHandler
 
     Public Sub EnactPriv(ByRef op As RegInfo)
         If op.name.StartsWith("**del.") Then
-            DeleteRegValue(op)
+            Try
+                If op.name.Equals("**del.DisableCMD") Then
+                    Dim a = 5
+                End If
+                DeleteRegValue(op)
+            Catch ex As Exception
+
+            End Try
+
         ElseIf op.name.StartsWith("**delvals.") Then
-            DeleteRegKey(op)
+            Try
+                DeleteRegKey(op)
+            Catch ex As Exception
+
+            End Try
+
         Else
-            RegEdit.WriteReg(op)
+            Try
+                RegEdit.WriteReg(op)
+            Catch ex As Exception
+
+            End Try
+
         End If
     End Sub
 

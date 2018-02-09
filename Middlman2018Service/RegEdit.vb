@@ -61,18 +61,20 @@ Module RegEdit
                 rKey = RegistryKey.OpenBaseKey(RegistryHive.Users, reg3264)
                 reg.path = SharedData.currentUserSid & "\" & reg.path
             Else
-                Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Invalid Hive")
+                reg.returnMessage = "OK"
+                Return reg
             End If
             rKey = rKey.OpenSubKey(reg.path, True)
             If IsNothing(rKey) Then
-                Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Cannot open path")
+                reg.returnMessage = "OK"
+                Return reg
             Else
-                rKey.DeleteValue(reg.name)
+                rKey.DeleteValue(reg.name.Split("."c)(1))
                 reg.returnMessage = "OK"
                 Return reg
             End If
         Catch ex As Exception
-            ' Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, ex.Message)
+            reg.returnMessage = "OK"
         End Try
         Return reg
     End Function
@@ -88,20 +90,23 @@ Module RegEdit
                 rKey = RegistryKey.OpenBaseKey(RegistryHive.Users, reg3264)
                 reg.path = SharedData.currentUserSid & "\" & reg.path
             Else
-                Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Invalid Hive")
+                reg.returnMessage = "OK"
+                Return reg
             End If
             rKey = rKey.OpenSubKey(reg.path, True)
             If IsNothing(rKey) Then
-                Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, "Cannot open path")
+                reg.returnMessage = "OK"
+                Return reg
             Else
                 rKey.DeleteSubKey(reg.name)
                 reg.returnMessage = "OK"
                 Return reg
             End If
         Catch ex As Exception
-            Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, ex.Message)
+            reg.returnMessage = "OK"
+            ' Throw New RegistryException(System.Reflection.MethodInfo.GetCurrentMethod.Name.ToString, ex.Message)
         End Try
-
+        Return reg
     End Function
 
     Private Function OpenCreateSubKey(ByRef baseKey As RegistryKey, path As String) As RegistryKey

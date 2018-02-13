@@ -176,8 +176,6 @@ Module RegEdit
         Return reg
     End Function
 
-
-
 End Module
 
 Public Structure RegInfo

@@ -112,6 +112,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AD.vb" />
     <Compile Include="CommandHandler.vb" />
     <Compile Include="FilePermissions.vb" />
     <Compile Include="ModShell.vb" />

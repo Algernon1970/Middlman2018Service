@@ -18,7 +18,7 @@ Public Class CommandHandler
     End Sub
 
     Public Function GetVersion() As String
-        Return "Version 2018.2"
+        Return "Version 2018.5"
     End Function
 
     Public Function Test(ByVal cmdline As String) As String
@@ -173,6 +173,43 @@ Public Class CommandHandler
         Else
             ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities GPUPDATE", "C:\Program Files\Ashby School\MiddlemanInstaller", False)
         End If
+        Return "OK"
+    End Function
+
+    Public Function MusicRedirect() As String
+        Dim ret As String = ""
+        Dim applocation As String = "Standard"
+        Dim op As New RegInfo
+        Dim music As Boolean = AD.CheckGroup("AS MusicTech Computers")
+        If music Then
+            If IO.Directory.Exists("D:\") Then
+                applocation = "D:\" & SharedData.currentUser & "\appData"
+                ret = "AppData D"
+            Else
+                applocation = "C:\Program Files\Ashby School\" & SharedData.currentUser & "\appData"
+                ret = "AppData C"
+            End If
+            If Not IO.Directory.Exists(applocation) Then
+                IO.Directory.CreateDirectory(applocation)
+            End If
+
+            WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoBackGroundPolicy=1|dword")
+            WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoGPOListChanges=1|dword")
+            op.name = "appdata"
+            op.type = RegistryValueKind.String
+            op.value = applocation
+            op.hive = "hkcu"
+            op.path = "Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"
+            RegEdit.WriteReg(op)
+            op.path = "Software\Microsoft\Windows\CurrentVersion\Explorer\Volatile Environment"
+            RegEdit.WriteReg(op)
+            op.path = "Software\Microsoft\Windows\CurrentVersion\Explorer\Environment"
+            RegEdit.WriteReg(op)
+        Else
+            WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoBackGroundPolicy=0|dword")
+            WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoGPOListChanges=0|dword")
+        End If
+        WriteLog(If(music, applocation, "Ordinary Redirect"), EventLogEntryType.Information)
         Return "OK"
     End Function
 
@@ -387,9 +424,6 @@ Public Class CommandHandler
     Public Sub EnactPriv(ByRef op As RegInfo)
         If op.name.StartsWith("**del.") Then
             Try
-                If op.name.Equals("**del.DisableCMD") Then
-                    Dim a = 5
-                End If
                 DeleteRegValue(op)
             Catch ex As Exception
 

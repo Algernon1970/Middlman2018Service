@@ -3,6 +3,7 @@ Imports System.IO
 Imports Hardcodet.Wpf.TaskbarNotification
 
 Class MainWindow
+#Region "Constants"
     Private Const WEB_URL As String = "http://127.0.0.1:1701/?command="
     Private Const WEB_SetName As String = "setuser&params="
     Private Const WEB_CheckOnline As String = "recheckonline"
@@ -19,12 +20,16 @@ Class MainWindow
     Private Const WEB_CopyMOTD As String = "GetMOTD"
     Private Const WEB_RecordDrives As String = "RecordDrives&params="
     Private Const WEB_LocalAdmin As String = "LocalAdmin&params="
-
+    Private Const WEB_MusicRedirect As String = "MusicRedirect"
+    Private Const WEB_Logout As String = "ForceLogout"
+#End Region
+#Region "Threads"
     Private ReadOnly PrintMapper As New BackgroundWorker()
     Private ReadOnly PrivUserMapper As New BackgroundWorker()
     Private ReadOnly OneDriveMapper As New BackgroundWorker()
     Private ReadOnly DriveMonitor As New BackgroundWorker()
     Private ReadOnly Explorer As New BackgroundWorker()
+#End Region
 
     Private PasswordHandler As New Password
     Private logging As Boolean = False
@@ -71,11 +76,15 @@ Class MainWindow
             pwdString = PasswordHandler.LoadPW
             If Not PasswordHandler.CheckPW(pwdString) Then
                 PasswordHandler.WindowStartupLocation = WindowStartupLocation.CenterScreen
+                Me.Visibility = Visibility.Hidden
                 PasswordHandler.ShowDialog()
+                Me.Visibility = Visibility.Visible
             End If
         Catch ex As Exception
             PasswordHandler.WindowStartupLocation = WindowStartupLocation.CenterScreen
+            Me.Visibility = Visibility.Hidden
             PasswordHandler.ShowDialog()
+            Me.Visibility = Visibility.Visible
         End Try
         Dim ret As String = ""
         Try
@@ -122,11 +131,25 @@ Class MainWindow
         End If
     End Sub
 
+    Private Sub HandleExplorerStart(sender As Object, e As DoWorkEventArgs)
+        Dim ret As String = ""
+        ret = WebLoader.Request(WEB_URL & WEB_UnHookGatekeeper)
+        Threading.Thread.Sleep(1000)
+        Process.Start("C:\windows\explorer.exe")
+        log.WriteEntry("Starting Explorer", EventLogEntryType.Information)
+        Threading.Thread.Sleep(5000)
+        ret = WebLoader.Request(WEB_URL & WEB_HookGatekeeper)
+    End Sub
 
 #Region "Drives"
     Private Sub MapDrivesButton_Click(sender As Object, e As RoutedEventArgs) Handles MapDrivesButton.Click
         log.WriteEntry("MapDrives: Manual selected", EventLogEntryType.Information)
+        MapDrivesButton.Header = "Mapping Drives..."
+        MapDrivesButton.IsEnabled = False
+        Threading.Thread.Sleep(500)
         DoMapDrives()
+        MapDrivesButton.IsEnabled = True
+        MapDrivesButton.Header = "Map Drives"
     End Sub
 
     Private Sub HandleOneDriveMapper(sender As Object, e As DoWorkEventArgs)
@@ -290,12 +313,13 @@ Class MainWindow
         Dim cmdArgs As String = "/c net use " + disk + " \\\\" + sharepointUri.Host + "@ssl" + sharepointUri.PathAndQuery.Replace("/", "\\") + homedir
         cmdArgs = cmdArgs.Replace("\\", "\")
 
-        Dim Process As Process = New System.Diagnostics.Process()
-        Process.StartInfo = New System.Diagnostics.ProcessStartInfo("cmd", cmdArgs) With {
+        Dim Process As Process = New Process With {
+            .StartInfo = New System.Diagnostics.ProcessStartInfo("cmd", cmdArgs) With {
             .CreateNoWindow = True,
             .RedirectStandardOutput = True,
             .RedirectStandardError = True,
             .UseShellExecute = False
+        }
         }
         Process.Start()
 
@@ -363,12 +387,12 @@ Class MainWindow
     End Function
 #End Region
 
+#Region "UI"
     Private Sub PasswordButton_Click(sender As Object, e As RoutedEventArgs) Handles PasswordButton.Click
         PasswordHandler.WindowStartupLocation = WindowStartupLocation.CenterScreen
         PasswordHandler.ShowDialog()
 
         If PasswordHandler.Status Then
-
             log.WriteEntry("PasswordHandler: Correct Password stored", EventLogEntryType.SuccessAudit)
         Else
             log.WriteEntry("PasswordHandler: Password not validated", EventLogEntryType.FailureAudit)
@@ -380,20 +404,15 @@ Class MainWindow
     End Sub
 
     Private Sub AcceptButton_Click(sender As Object, e As RoutedEventArgs) Handles AcceptButton.Click
+        WebLoader.Request(WEB_URL & WEB_MusicRedirect)
         Me.Visibility = Visibility.Hidden
         Explorer.RunWorkerAsync()
     End Sub
 
-    Private Sub HandleExplorerStart(sender As Object, e As DoWorkEventArgs)
-        Dim ret As String = ""
-        ret = WebLoader.Request(WEB_URL & WEB_UnHookGatekeeper)
-        Threading.Thread.Sleep(1000)
-        Process.Start("C:\windows\explorer.exe")
-        log.WriteEntry("Starting Explorer", EventLogEntryType.Information)
-        Threading.Thread.Sleep(5000)
-        ret = WebLoader.Request(WEB_URL & WEB_HookGatekeeper)
+    Private Sub DeclineButton_Click(sender As Object, e As RoutedEventArgs) Handles DeclineButton.Click
+        WebLoader.Request(WEB_URL & WEB_Logout)
     End Sub
-
+#End Region
 End Class
 
 Structure Pinfo

@@ -43,5 +43,6 @@ Public Class Password
 
         Return decoder.DecryptData(encoded)
     End Function
+
 End Class
 

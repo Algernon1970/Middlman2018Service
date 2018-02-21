@@ -108,6 +108,7 @@
       <DependentUpon>Password.xaml</DependentUpon>
     </Compile>
     <Compile Include="PrinterMapper.vb" />
+    <Compile Include="SharedModule.vb" />
     <Compile Include="Simple3Des.vb" />
     <Compile Include="WebLoader.vb" />
     <Page Include="MainWindow.xaml">
@@ -123,6 +124,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Password.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Stylings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -193,6 +198,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\whitecloud.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logosmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CircleLogo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

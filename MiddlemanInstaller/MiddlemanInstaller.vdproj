@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_382EF51F9493F0338E45F3740BE3B8A6"
-        "OwnerKey" = "8:_9F6AEF89F981486D8E89F863EA89C466"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_500D113A390A017818A54AAFA4038004"
         "OwnerKey" = "8:_E1005CFD9CA8EAD8E71D5E941C6C86BD"
         "MsmSig" = "8:_UNDEFINED"
@@ -51,14 +45,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_83DCAD26674558CEE991684328EB93DA"
-        "OwnerKey" = "8:_92381204AC684C7B930FA481EC419878"
+        "MsmKey" = "8:_82F372893577465F9AB0E6C541B97190"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_83DCAD26674558CEE991684328EB93DA"
-        "OwnerKey" = "8:_B790CBF6DA504526948557FBC7DDC357"
+        "OwnerKey" = "8:_92381204AC684C7B930FA481EC419878"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -70,7 +64,13 @@
         "Entry"
         {
         "MsmKey" = "8:_83DCAD26674558CEE991684328EB93DA"
-        "OwnerKey" = "8:_382EF51F9493F0338E45F3740BE3B8A6"
+        "OwnerKey" = "8:_B790CBF6DA504526948557FBC7DDC357"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_83DCAD26674558CEE991684328EB93DA"
+        "OwnerKey" = "8:_B92BC29747AECD023D5F19C0ABFAF6E6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -99,6 +99,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B92BC29747AECD023D5F19C0ABFAF6E6"
+        "OwnerKey" = "8:_9F6AEF89F981486D8E89F863EA89C466"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DF0C5B591056408A9907638B13732EFA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -118,13 +124,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_75398DA0276B78363C2CA0F3CA283184"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B790CBF6DA504526948557FBC7DDC357"
+        "OwnerKey" = "8:_500D113A390A017818A54AAFA4038004"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -136,19 +136,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_382EF51F9493F0338E45F3740BE3B8A6"
+        "OwnerKey" = "8:_B790CBF6DA504526948557FBC7DDC357"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_75398DA0276B78363C2CA0F3CA283184"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B92BC29747AECD023D5F19C0ABFAF6E6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9F6AEF89F981486D8E89F863EA89C466"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_500D113A390A017818A54AAFA4038004"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -326,37 +332,6 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_382EF51F9493F0338E45F3740BE3B8A6"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ASCookieIntegrated, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_382EF51F9493F0338E45F3740BE3B8A6"
-                    {
-                    "Name" = "8:ASCookieIntegrated.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ASCookieIntegrated.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_4EA918493D6F44DF8900C9E0A60F590A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_500D113A390A017818A54AAFA4038004"
             {
             "AssemblyRegister" = "3:1"
@@ -450,6 +425,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_82F372893577465F9AB0E6C541B97190"
+            {
+            "SourcePath" = "8:..\\Gatekeeper2018\\Resources\\CircleLogo.png"
+            "TargetName" = "8:CircleLogo.png"
+            "Tag" = "8:"
+            "Folder" = "8:_270180E9DB354DC8832DE8AE6CC458B9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_83DCAD26674558CEE991684328EB93DA"
             {
             "AssemblyRegister" = "3:1"
@@ -464,6 +459,37 @@
                     }
                 }
             "SourcePath" = "8:System.Net.Http.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_4EA918493D6F44DF8900C9E0A60F590A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B92BC29747AECD023D5F19C0ABFAF6E6"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ASCookieIntegrated, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_B92BC29747AECD023D5F19C0ABFAF6E6"
+                    {
+                    "Name" = "8:ASCookieIntegrated.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ASCookieIntegrated.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4EA918493D6F44DF8900C9E0A60F590A"
@@ -550,6 +576,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_270180E9DB354DC8832DE8AE6CC458B9"
+                    {
+                    "Name" = "8:Resources"
+                    "AlwaysCreate" = "11:TRUE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_A7991D88CA4B4A8ABDF1BC441735C733"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
         }
@@ -569,7 +606,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MiddlemanInstaller"
         "ProductCode" = "8:{B08F878C-7D12-4AA2-973F-7D9EDF7875EC}"
-        "PackageCode" = "8:{AD224026-8D7A-420C-B2D1-7B29DBA810AD}"
+        "PackageCode" = "8:{FEF05A9D-3306-4AC9-A5E4-4B622782E984}"
         "UpgradeCode" = "8:{C4903610-7E56-4703-BADE-750D24BF87A8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

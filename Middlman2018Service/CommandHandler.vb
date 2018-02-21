@@ -18,7 +18,7 @@ Public Class CommandHandler
     End Sub
 
     Public Function GetVersion() As String
-        Return "Version 2018.5"
+        Return "Version 2018.1rc"
     End Function
 
     Public Function Test(ByVal cmdline As String) As String
@@ -26,12 +26,19 @@ Public Class CommandHandler
     End Function
 
     Public Function SetUser(ByVal params As String) As String
+
         SharedData.currentUser = params
-        Dim pr As DataTable = SharedData.PersonTableAdapter.GetPersonBySam(SharedData.currentUser)
-        If pr.Rows.Count = 0 Then
-            pr = CreateUserRecord(SharedData.currentUser)
+        If SharedData.AmIOnDomain.Equals("Ashby Domain") Then
+            Dim pr As DataTable = SharedData.PersonTableAdapter.GetPersonBySam(SharedData.currentUser)
+            If pr.Rows.Count = 0 Then
+                pr = CreateUserRecord(SharedData.currentUser)
+            End If
+            SharedData.currentUserSid = pr(0).Field(Of String)("SID")
+        Else
+            Dim upx As UserPrincipalex = getUserPrincipalexbyUsername(userCTX, SharedData.currentUser)
+            SharedData.currentUserSid = upx.Sid.ToString
         End If
-        SharedData.currentUserSid = pr(0).Field(Of String)("SID")
+
         Return "Name = " & params
     End Function
 
@@ -60,7 +67,7 @@ Public Class CommandHandler
             success = ProcessExtensions.StartProcessAsCurrentUser(cmdline)
         End If
         WriteLog(String.Format("Execute: {0}", cmdline), EventLogEntryType.Warning)
-        Return If(success, "Succeeded", "Failed")
+        Return If(success, "Execute Succeeded", "Execute Failed")
     End Function
 
     Public Function CheckOnline() As String
@@ -70,7 +77,8 @@ Public Class CommandHandler
     Public Function RecheckOnline() As String
         Dim ret As String = AmIOnDomain()
         WriteLog(String.Format("RecheckOnline: {0}", ret), EventLogEntryType.Information)
-        Return If(ret = "Offline", "Offline", "Online")
+        Return ret
+        'Return If(ret = "Offline", "Offline", "Online")
     End Function
 
     Public Function GetComputerID() As String
@@ -145,7 +153,7 @@ Public Class CommandHandler
         If printTable.Rows.Count > 0 Then
             Return printTable.Rows(0).Field(Of String)("Name")
         Else
-            Return "No Printer"
+            Return "No Printer (GetPrinterName)"
         End If
     End Function
 
@@ -154,7 +162,7 @@ Public Class CommandHandler
         If printTable.Rows.Count > 0 Then
             Return printTable.Rows(0).Field(Of String)("ConnectionString")
         Else
-            Return "No Printer"
+            Return "No Printer (GetPrinterConnection)"
         End If
     End Function
 
@@ -164,7 +172,7 @@ Public Class CommandHandler
         Else
             ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities LOCK", "C:\Program Files\Ashby School\MiddlemanInstaller", True)
         End If
-        Return "OK"
+        Return "OK Locked"
     End Function
 
     Public Function GPUpdate() As String
@@ -173,7 +181,7 @@ Public Class CommandHandler
         Else
             ProcessExtensions.StartProcessAsCurrentUser("C:\Program Files\Ashby School\MiddlemanInstaller\userutilities2018.exe", "Utilities GPUPDATE", "C:\Program Files\Ashby School\MiddlemanInstaller", False)
         End If
-        Return "OK"
+        Return "OK GPUPdate"
     End Function
 
     Public Function MusicRedirect() As String
@@ -210,7 +218,7 @@ Public Class CommandHandler
             WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoGPOListChanges=0|dword")
         End If
         WriteLog(If(music, applocation, "Ordinary Redirect"), EventLogEntryType.Information)
-        Return "OK"
+        Return "OK Redirect"
     End Function
 
     Public Function HookGatekeeper(ByRef opt As String) As String
@@ -220,7 +228,7 @@ Public Class CommandHandler
         Else
             ret = WriteReg("hklm\software\microsoft\windows nt\currentversion\winlogon\shell=explorer.exe|String")
         End If
-        Return ret
+        Return ret & "HookGateKeeper " & opt
     End Function
 
     ''' <summary>
@@ -237,7 +245,7 @@ Public Class CommandHandler
 
     Public Function RecordDrives(ByRef driveList As String)
         SharedData.mappedDrives = driveList
-        Return "OK"
+        Return "OK (RecordDrives)"
     End Function
 
     Public Function ReadReg(ByRef path As String) As String
@@ -310,7 +318,7 @@ Public Class CommandHandler
             Return "Error - " & ex.Message
         End Try
         WriteLog(String.Format("LocalAdmin: {0}", username), EventLogEntryType.SuccessAudit)
-        Return "OK"
+        Return "OK (LocalAdmin)"
     End Function
 
     Public Function IsPrivUser() As String
@@ -318,9 +326,9 @@ Public Class CommandHandler
         Dim pid As Integer = Integer.Parse(GetPersonID())
         Dim count As Integer = SharedData.PersonLinkTableAdapter.PrivExists(cid, pid)
         If count > 0 Then
-            Return True
+            Return "True"
         Else
-            Return False
+            Return "False"
         End If
 
 
@@ -337,10 +345,10 @@ Public Class CommandHandler
             Using fs As New FileStream(path, FileMode.Create)
                 fs.Write(dataItem, 0, dataItem.Length)
             End Using
-            Return True
+            Return "True"
             FilePermissions.GrantEveroneReadAccess(path)
         End If
-        Return False
+        Return "False"
     End Function
 
     Public Function GetMOTD() As String
@@ -418,7 +426,7 @@ Public Class CommandHandler
 
             End Using
         End If
-        Return "OK"
+        Return "OK (SetPriv)"
     End Function
 
     Public Sub EnactPriv(ByRef op As RegInfo)

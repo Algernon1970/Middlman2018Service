@@ -33,13 +33,20 @@ Public Class WebServer
     End Sub
 
     Private Sub Respond(ByRef c As HttpListenerContext, ByVal response As String)
-        Dim buffer() As Byte = Encoding.Unicode.GetBytes(response)
+        Try
+            Dim buffer() As Byte = Encoding.Unicode.GetBytes(response)
+            c.Response.ContentLength64 = buffer.Length
+            Dim output As System.IO.Stream = c.Response.OutputStream
+            output.Write(buffer, 0, buffer.Length)
+            output.Flush()
+            output.Close()
+        Catch ex As Exception
+            Dim log As EventLog = GetLogger()
+            If log IsNot Nothing Then
+                log.WriteEntry(String.Format("Respond:{0} - {1}", response, ex.Message))
+            End If
+        End Try
 
-        c.Response.ContentLength64 = buffer.Length
-        Dim output As System.IO.Stream = c.Response.OutputStream
-        output.Write(buffer, 0, buffer.Length)
-        output.Flush()
-        output.Close()
     End Sub
 
     Private Function HandleCommands(ByRef c As HttpListenerContext) As String

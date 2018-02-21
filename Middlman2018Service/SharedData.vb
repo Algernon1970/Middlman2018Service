@@ -1,4 +1,6 @@
-﻿Module SharedData
+﻿Imports System.Net.NetworkInformation
+
+Module SharedData
     Public ComputerTableAdapter As New ZuulDataSetTableAdapters.Tbl_ComputerTableAdapter
     Public PrinterLinkTableAdapter As New ZuulDataSetTableAdapters.Lnk_ComputerPrinterTableAdapter
     Public PrinterTableAdapter As New ZuulDataSetTableAdapters.Tbl_PrinterTableAdapter
@@ -23,19 +25,51 @@
             Return Nothing
         End Try
         eLog.Source = "Middle"
-        Return elog
+        Return eLog
     End Function
 
     Public Function AmIOnDomain() As String
+        Dim pinger As New Ping
         Try
-            ComputerTableAdapter.Connection.Open()
-        Catch ex As Exception
-            Return "Offline"
-        End Try
+            If IsNetworkAvailable() Then
+                Dim reply As PingReply = pinger.Send("svr-dca", 2000)
+                If reply.Status = IPStatus.Success Then
+                    online = True
+                    Return "Ashby Domain"
+                Else
+                    online = False
+                    Return "Not Ashby Domain"
 
-        Dim serverv As String = ComputerTableAdapter.Connection.ServerVersion
-        ComputerTableAdapter.Connection.Close()
-        Return serverv
+                End If
+            Else
+                online = False
+                Return "No Network"
+            End If
+
+        Catch ex As Exception
+            online = False
+            Return "Failed check"
+        End Try
+    End Function
+
+    Private Function IsNetworkAvailable() As Boolean
+        Dim log As EventLog = GetLogger()
+        log.WriteEntry("Starting IsNetworkAvailable", EventLogEntryType.Warning)
+        If NetworkInterface.GetIsNetworkAvailable Then
+            For Each face As NetworkInterface In NetworkInterface.GetAllNetworkInterfaces
+                If face.OperationalStatus = OperationalStatus.Up Then
+                    If (Not face.NetworkInterfaceType = NetworkInterfaceType.Tunnel) And (Not face.NetworkInterfaceType = NetworkInterfaceType.Loopback) Then
+                        If face.GetIPv4Statistics.BytesReceived > 0 And face.GetIPv4Statistics.BytesSent > 0 Then
+                            log.WriteEntry("Finished IsNetworkAvailable - true", EventLogEntryType.Warning)
+                            Return True
+                        End If
+                    End If
+                End If
+            Next
+
+        End If
+        log.WriteEntry("Finished IsNetworkAvailable - false", EventLogEntryType.Warning)
+        Return False
     End Function
 
 End Module

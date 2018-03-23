@@ -33,6 +33,7 @@ Public Class WebServer
     End Sub
 
     Private Sub Respond(ByRef c As HttpListenerContext, ByVal response As String)
+        Dim log As EventLog = GetLogger()
         Try
             Dim buffer() As Byte = Encoding.Unicode.GetBytes(response)
             c.Response.ContentLength64 = buffer.Length
@@ -41,7 +42,6 @@ Public Class WebServer
             output.Flush()
             output.Close()
         Catch ex As Exception
-            Dim log As EventLog = GetLogger()
             If log IsNot Nothing Then
                 log.WriteEntry(String.Format("Respond:{0} - {1}", response, ex.Message))
             End If
@@ -50,16 +50,18 @@ Public Class WebServer
     End Sub
 
     Private Function HandleCommands(ByRef c As HttpListenerContext) As String
+        Dim eLog As EventLog = GetLogger()
         Try
             If IsNothing(c.Request.QueryString("params")) Then
+                eLog.WriteEntry(String.Format("HandleCommands: {0}", c.Request.QueryString("command")))
                 Return CStr(CallByName(New CommandHandler, c.Request.QueryString("command"), Microsoft.VisualBasic.CallType.Method))
             Else
+                eLog.WriteEntry(String.Format("HandleCommands: {0} & {1}", c.Request.QueryString("command"), c.Request.QueryString("params")))
                 Return CStr(CallByName(New CommandHandler, c.Request.QueryString("command"), Microsoft.VisualBasic.CallType.Method, c.Request.QueryString("params")))
             End If
 
         Catch ex As Exception
             Return "Failed to call " & c.Request.QueryString("command")
-            Dim eLog As EventLog = GetLogger()
             If eLog IsNot Nothing Then
                 eLog.WriteEntry(String.Format("HandleCommands {0}: Failed {1}", c.Request.QueryString("command"), ex.Message))
             End If

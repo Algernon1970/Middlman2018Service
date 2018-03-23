@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.IO
+Imports GatekeeperTools
 Imports Hardcodet.Wpf.TaskbarNotification
 
 Class MainWindow
@@ -64,20 +65,27 @@ Class MainWindow
     Private Sub Setup()
         MapDrivesButton.Header = "Mapping Drives..."
         MapDrivesButton.IsEnabled = False
+        PasswordButton.Header = "Offline"
+        PasswordButton.IsEnabled = False
         NotifyIcon.Icon = My.Resources.whitecloud
         Dim pwdString As String = "none"
         pwdString = PasswordHandler.LoadPW
         Dim ret As String = ""
         Try
             ret = WebLoader.Request(WEB_URL & WEB_GetVersion)
-            GatekeeperMainWindow.Title = String.Format("Gatekeeper 2018 {0}", ret)
+            VersionLabel.Content = String.Format("{0}", ret)
             ret = WebLoader.Request(WEB_URL & WEB_CheckOnline)
             statusLabel.Content = ret
             If ret.ToLower.Equals("ashby domain") Then
+                Log("Setup: Showing online", EventLogEntryType.Warning)
                 online = True
+                PasswordButton.IsEnabled = True
+                PasswordButton.Header = "Cloud Drives Password"
                 HandlePassword(pwdString)
                 ret = WebLoader.Request(WEB_URL & WEB_GetComputerID)
                 ret = WebLoader.Request(WEB_URL & WEB_CopyMOTD)
+            Else
+                Log("Setup: Showing OFFLINE", EventLogEntryType.Error)
             End If
             ret = WebLoader.Request(WEB_URL & WEB_SetName & Environment.UserName)
             Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) & "\Ashby School\motd.rtf"
@@ -249,7 +257,7 @@ Class MainWindow
 
             End If
         Next
-        WebLoader.Request(WEB_URL & WEB_RecordDrives & rlist)
+        ' WebLoader.Request(WEB_URL & WEB_RecordDrives & rlist)
         If rlist.Length = monitoredDrives.Length Then
             NotifyIcon.Icon = My.Resources.greencloud
             NotifyIcon.HideBalloonTip()
@@ -263,7 +271,7 @@ Class MainWindow
         Dim outline As String = ""
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
-        Dim passwd As String = PasswordHandler.LoadPW
+        Dim passwd As String = PasswordHandler.LoadPWE
         p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
         p.UseShellExecute = False
         p.RedirectStandardOutput = True
@@ -287,7 +295,7 @@ Class MainWindow
     Private Sub MapY()
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
-        Dim passwd As String = PasswordHandler.LoadPW
+        Dim passwd As String = PasswordHandler.LoadPWE
         p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
         p.WindowStyle = ProcessWindowStyle.Hidden
         p.UseShellExecute = False
@@ -308,7 +316,7 @@ Class MainWindow
     Private Sub MapV()
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
-        Dim passwd As String = PasswordHandler.LoadPW
+        Dim passwd As String = PasswordHandler.LoadPWE
         p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
         p.WindowStyle = ProcessWindowStyle.Hidden
         p.UseShellExecute = False
@@ -329,7 +337,7 @@ Class MainWindow
     Private Sub MapS()
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
-        Dim passwd As String = PasswordHandler.LoadPW
+        Dim passwd As String = PasswordHandler.LoadPWE
         p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
         p.WindowStyle = ProcessWindowStyle.Hidden
         p.UseShellExecute = False
@@ -435,7 +443,9 @@ Class MainWindow
         Dim plist As New List(Of Pinfo)
         Dim cs As String
         Dim pdefault As Boolean
+        'Log("Calling GetPrinterList()", EventLogEntryType.Error)
         ret = WebLoader.Request(WEB_URL & WEB_GetPrinterList)
+        'Log(String.Format("GetPrinterList finished: {0}", ret), EventLogEntryType.Information)
         For Each pid As String In ret.Split(",".ToCharArray)
             If pid.Length > 0 Then
                 pdefault = False
@@ -458,13 +468,19 @@ Class MainWindow
 
 #Region "UI"
     Private Sub PasswordButton_Click(sender As Object, e As RoutedEventArgs) Handles PasswordButton.Click
-        PasswordHandler.WindowStartupLocation = WindowStartupLocation.CenterScreen
-        PasswordHandler.ShowDialog()
+        Dim ret As String = WebLoader.Request(WEB_URL & WEB_CheckOnline)
+        If ret.ToLower.Equals("ashby domain") Then
+            PasswordHandler.WindowStartupLocation = WindowStartupLocation.CenterScreen
+            PasswordHandler.ShowDialog()
 
-        If PasswordHandler.Status Then
-            Log("PasswordHandler: Correct Password stored", EventLogEntryType.SuccessAudit)
+            If PasswordHandler.Status Then
+                Log("PasswordHandler: Correct Password stored", EventLogEntryType.SuccessAudit)
+            Else
+                Log("PasswordHandler: Password not validated", EventLogEntryType.FailureAudit)
+            End If
         Else
-            Log("PasswordHandler: Password not validated", EventLogEntryType.FailureAudit)
+            PasswordButton.Header = "Offline"
+            PasswordButton.IsEnabled = False
         End If
     End Sub
 

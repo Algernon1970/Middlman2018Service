@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports System.DirectoryServices.AccountManagement
+Imports GatekeeperTools
 
 Public Class Password
     Private Const WEB_URL As String = "http://127.0.0.1:1701/?command="
@@ -48,6 +49,10 @@ Public Class Password
         End Using
     End Sub
 
+    ''' <summary>
+    ''' Return the password DECODED!
+    ''' </summary>
+    ''' <returns></returns>
     Public Function LoadPW() As String
         If File.Exists("N:\\My Settings\\Ashby School\\cpd.ash") Then
             Dim w As New StreamReader(File.Open("N:\\My Settings\\Ashby School\\cpd.ash", FileMode.Open))
@@ -57,6 +62,22 @@ Public Class Password
             w.Dispose()
 
             Return decoder.DecryptData(encoded)
+        End If
+        Return "NOPWD"
+    End Function
+
+    ''' <summary>
+    ''' return the password encoded.
+    ''' </summary>
+    ''' <returns></returns>
+    Public Function LoadPWE() As String
+        If File.Exists("N:\\My Settings\\Ashby School\\cpd.ash") Then
+            Dim w As New StreamReader(File.Open("N:\\My Settings\\Ashby School\\cpd.ash", FileMode.Open))
+            Dim encoded As String = w.ReadLine()
+            w.Close()
+            w.Dispose()
+
+            Return encoded
         End If
         Return "NOPWD"
     End Function

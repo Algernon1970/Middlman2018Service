@@ -52,16 +52,17 @@
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
         <Grid x:Name="CentreGrid" HorizontalAlignment="Center" Height="600" Margin="0" VerticalAlignment="Center" Width="800">
-            <Button x:Name="AcceptButton" Content="Accept" HorizontalAlignment="Left" Margin="649,0,0,56" VerticalAlignment="Bottom" Width="75" Height="40" Template="{DynamicResource ButtonControlTemplate1}" Foreground="White" />
-            <Button x:Name="DeclineButton" Content="Decline" HorizontalAlignment="Left" Margin="66,0,0,56" VerticalAlignment="Bottom" Width="75" Height="40" RenderTransformOrigin="0.447,1.955" Template="{DynamicResource ButtonControlTemplate1}" Foreground="White"/>
-            <Label x:Name="statusLabel" Content="Label" HorizontalAlignment="Left" Margin="649,574,0,-15" VerticalAlignment="Top" Width="106" Height="41" Foreground="White"/>
-            <RichTextBox x:Name="DisplayBox" HorizontalAlignment="Center" Margin="67,113,75,150" Width="658" VerticalAlignment="Center" Height="337" BorderBrush="#FF669CC5" VerticalScrollBarVisibility="Auto">
+            <Button x:Name="AcceptButton" Content="Accept" HorizontalAlignment="Left" Margin="649,0,0,90" VerticalAlignment="Bottom" Width="75" Height="40" Template="{DynamicResource ButtonControlTemplate1}" Foreground="White" />
+            <Button x:Name="DeclineButton" Content="Decline" HorizontalAlignment="Left" Margin="67,0,0,90" VerticalAlignment="Bottom" Width="75" Height="40" RenderTransformOrigin="0.447,1.955" Template="{DynamicResource ButtonControlTemplate1}" Foreground="White"/>
+            <Label x:Name="statusLabel" Content="Label" HorizontalAlignment="Left" Margin="649,533,0,0" VerticalAlignment="Top" Width="106" Height="41" Foreground="White"/>
+            <RichTextBox x:Name="DisplayBox" HorizontalAlignment="Center" Margin="67,113,75,150" Width="658" VerticalAlignment="Center" Height="337" BorderBrush="#FF669CC5" VerticalScrollBarVisibility="Auto" Padding="8,16,8,8" UseLayoutRounding="False">
                 <FlowDocument>
                     <Paragraph>
                         <Run Text=""/>
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
+            <Label x:Name="VersionLabel" Content="V2018.x" HorizontalAlignment="Left" Margin="67,570,0,0" VerticalAlignment="Top" Foreground="#FF5A75B0" Width="412" FontSize="8" FontFamily="Sitka Small"/>
         </Grid>
     </Grid>
 </Window>

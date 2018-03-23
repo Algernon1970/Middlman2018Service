@@ -8,6 +8,7 @@ using System.Net;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using Cookie365;
+using GatekeeperTools;
 
 namespace Cookie365
 {
@@ -31,7 +32,7 @@ namespace Cookie365
             bool mount = false;
             double expire = 0;
             string homedir = "";
-
+            Simple3Des dec = new Simple3Des("A$hbySchool1");
 
             //Parse args
             Args CommandLine = new Args(args);
@@ -65,7 +66,8 @@ namespace Cookie365
                         }
 
                         // If password is specified, use it, otherwise try integrated authentication
-                        if (CommandLine["p"] != null) { password = CommandLine["p"]; useIntegratedAuth = false; }
+                        
+                        if (CommandLine["p"] != null) { password = dec.DecryptData(CommandLine["p"]); useIntegratedAuth = false; }
 
                         // Set the flag for quiet mode
                         if (CommandLine["quiet"] != null)
@@ -169,11 +171,12 @@ namespace Cookie365
 
         private static void OtherMaps(bool quiet, Args CommandLine)
         {
+            Simple3Des dec = new Simple3Des("A$hbySchool1");
             if (CommandLine["m"] != null)
             {
                 //String username = System.DirectoryServices.AccountManagement.UserPrincipal.Current.UserPrincipalName;
                 String username = Environment.UserName;  //+ "@ashbyschool.org.uk";
-                String password = CommandLine["p"];
+                String password = dec.DecryptData(CommandLine["p"]);
 
                 //if (username != null) { if (CommandLine["d"] != null) username = username.Split('@')[0] + "@" + CommandLine["d"]; }
                 String line = CommandLine["m"];

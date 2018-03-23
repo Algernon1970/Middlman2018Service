@@ -18,7 +18,7 @@ Public Class CommandHandler
     End Sub
 
     Public Function GetVersion() As String
-        Return "Version 2018.1rc"
+        Return "Version 2018.3rc"
     End Function
 
     Public Function Test(ByVal cmdline As String) As String
@@ -54,6 +54,7 @@ Public Class CommandHandler
         For Each objComputer In objWMIService.InstancesOf("Win32_OperatingSystem")
             t = objComputer.Win32Shutdown(0, 0)
         Next
+        WriteLog("ForceLogout", EventLogEntryType.Warning)
         Return "Daisy..... Daisy....."
     End Function
 
@@ -85,7 +86,7 @@ Public Class CommandHandler
         Dim cid As Integer = 0
         Dim cr As DataTable = SharedData.ComputerTableAdapter.GetComputerByName(My.Computer.Name)
         If cr.Rows.Count = 0 Then
-            If SharedData.ComputerTableAdapter.CreateComputer(My.Computer.Name, "0", "0", "", "", 0, 0, False, 1, 1, "0", "0", Now.ToShortDateString, 0) <> 0 Then
+            If SharedData.ComputerTableAdapter.CreateComputer(My.Computer.Name, "0", "0", "", "", 0, 0, False, 1, 1, "0", "0", Now.ToShortDateString, 0, "") <> 0 Then
                 cr = SharedData.ComputerTableAdapter.GetComputerByName(My.Computer.Name)
                 If cr.Rows.Count = 0 Then Return "0"
             End If
@@ -99,6 +100,8 @@ Public Class CommandHandler
         Dim pr As DataTable = SharedData.PersonTableAdapter.GetPersonBySam(SharedData.currentUser)
         If pr.Rows.Count = 0 Then
             pr = CreateUserRecord(SharedData.currentUser)
+        Else
+            pr = UpdateUserRecord(SharedData.currentUser)
         End If
         pid = pr.Rows(0).Field(Of Integer)("PersonID")
         Return pid.ToString
@@ -120,32 +123,45 @@ Public Class CommandHandler
 
     Private Function CreateUserRecord(ByVal sam As String) As DataTable
         Dim upx As UserPrincipalex = getUserPrincipalexbyUsername(userCTX, sam)
-        SharedData.PersonTableAdapter.CreatePerson(upx.GivenName, upx.Surname, sam, upx.Sid.ToString)
+        SharedData.PersonTableAdapter.CreatePerson(upx.GivenName, upx.Surname, sam, upx.Sid.ToString, upx.EmployeeId, Now)
+        Return SharedData.PersonTableAdapter.GetPersonBySam(sam)
+    End Function
+    Private Function UpdateUserRecord(ByVal sam As String) As DataTable
+        Dim upx As UserPrincipalex = getUserPrincipalexbyUsername(userCTX, sam)
+        SharedData.PersonTableAdapter.UpdateUser(upx.GivenName, upx.Surname, upx.Sid.ToString, upx.EmployeeId, Now, sam)
         Return SharedData.PersonTableAdapter.GetPersonBySam(sam)
     End Function
 
     Public Function GetPrinterList() As String
-        Dim pList As String = ","
-        Dim cid As Integer = Integer.Parse(GetComputerID())
-        Dim pidTable As DataTable = SharedData.PrinterLinkTableAdapter.GetPIDsByComputerID(cid)
-        Dim pid As Integer
-        If pidTable.Rows.Count > 0 Then
-            For Each row As DataRow In pidTable.Rows
-                pid = row.Field(Of Integer)("PrinterID")
-                If row.Field(Of Boolean)("isDefaultPrinter") Then
-                    pList = String.Format("{0},*{1}", pList, pid)
-                Else
-                    pList = String.Format("{0},{1}", pList, pid)
-                End If
+        WriteLog("Starting GetPrinterList", EventLogEntryType.Error)
+        Try
+            Dim pList As String = ","
+            Dim cid As Integer = Integer.Parse(GetComputerID())
+            'WriteLog("GetPrinterList getComputerID = " & cid, EventLogEntryType.Error)
+            Dim pidTable As DataTable = SharedData.PrinterLinkTableAdapter.GetPIDsByComputerID(cid)
+            Dim pid As Integer
+            WriteLog(String.Format("GetPrinterList: CID={0}, Count={1}", cid, pidTable.Rows.Count), EventLogEntryType.Information)
+            If pidTable.Rows.Count > 0 Then
+                For Each row As DataRow In pidTable.Rows
+                    pid = row.Field(Of Integer)("PrinterID")
+                    If row.Field(Of Boolean)("isDefaultPrinter") Then
+                        pList = String.Format("{0},*{1}", pList, pid)
+                    Else
+                        pList = String.Format("{0},{1}", pList, pid)
+                    End If
 
-            Next
-        End If
-        If pList.Length = 1 Then
-            pList = "0"
-        Else
-            pList = pList.Substring(1)
-        End If
-        Return pList
+                Next
+            End If
+            If pList.Length = 1 Then
+                pList = "0"
+            Else
+                pList = pList.Substring(1)
+            End If
+            Return pList
+        Catch ex As Exception
+            WriteLog(String.Format("GetPrinterList: {0}", ex.Message), EventLogEntryType.Error)
+        End Try
+        Return ","
     End Function
 
     Public Function GetPrinterName(ByRef pid As String) As String

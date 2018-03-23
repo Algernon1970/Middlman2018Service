@@ -109,7 +109,6 @@
     </Compile>
     <Compile Include="PrinterMapper.vb" />
     <Compile Include="SharedModule.vb" />
-    <Compile Include="Simple3Des.vb" />
     <Compile Include="WebLoader.vb" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -188,6 +187,10 @@
     <ProjectReference Include="..\ASCookieIntegrated\ASCookieIntegrated.csproj">
       <Project>{2f47b41a-31b6-4b81-8ee4-e4a0f4510d47}</Project>
       <Name>ASCookieIntegrated</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GatekeeperTools\GatekeeperTools.vbproj">
+      <Project>{C4E2F7C7-FBE6-4C57-B11F-B55A4E9A8216}</Project>
+      <Name>GatekeeperTools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -58,5 +58,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GatekeeperTools\GatekeeperTools.vbproj">
+      <Project>{C4E2F7C7-FBE6-4C57-B11F-B55A4E9A8216}</Project>
+      <Name>GatekeeperTools</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

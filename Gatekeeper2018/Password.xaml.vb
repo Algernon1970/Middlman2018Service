@@ -6,6 +6,7 @@ Public Class Password
     Private Const WEB_URL As String = "http://127.0.0.1:1701/?command="
     Private Const WEB_Logout As String = "ForceLogout"
     Public Status As Boolean = False
+    Public attempts As Integer = 0
     Private Sub CheckPwdButton_Click(sender As Object, e As RoutedEventArgs) Handles CheckPwdButton.Click
         ProcessPWBox()
     End Sub
@@ -18,14 +19,24 @@ Public Class Password
 
     Private Sub ProcessPWBox()
         Dim pwd As String = PasswordText.Password
+        If pwd.Equals("skip") Or attempts > 2 Then
+            PasswordText.Clear()
+            Status = False
+            Me.Visibility = Visibility.Hidden
+            MsgBox(String.Format("Mapped Drives Password has not been validated.{0}Contact Network Services.", vbCrLf))
+            attempts = 0
+            Return
+        End If
         Dim enc As New Simple3Des("A$hbySchool1")
         If CheckPW(pwd) Then
+            attempts = 0
             Status = True
             StorePW(enc.EncryptData(pwd))
             Me.Visibility = Visibility.Hidden
             PasswordText.Clear()
         Else
-            StatusText.Content = "Password is wrong."
+            attempts = attempts + 1
+            StatusText.Content = String.Format("Password incorrect. ({0} attempts remain.)", 4 - attempts)
             Status = False
             PasswordText.Clear()
         End If

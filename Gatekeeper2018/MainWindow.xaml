@@ -62,7 +62,7 @@
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
-            <Label x:Name="VersionLabel" Content="V2018.x" HorizontalAlignment="Left" Margin="67,570,0,0" VerticalAlignment="Top" Foreground="#FF5A75B0" Width="412" FontSize="8" FontFamily="Sitka Small"/>
+            <Label x:Name="VersionLabel" Content="V2018.x" HorizontalAlignment="Left" Margin="67,570,0,0" VerticalAlignment="Top" Foreground="#FF9BADD4" Width="412" FontSize="8" FontFamily="Sitka Small"/>
         </Grid>
     </Grid>
 </Window>

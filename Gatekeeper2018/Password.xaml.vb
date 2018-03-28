@@ -23,7 +23,8 @@ Public Class Password
             PasswordText.Clear()
             Status = False
             Me.Visibility = Visibility.Hidden
-            MsgBox(String.Format("Mapped Drives Password has not been validated.{0}Contact Network Services.", vbCrLf))
+            Dim messageBox As New DialogueScreen("Mapped Drives", String.Format("Mapped Drives Password has not been validated.{0}Contact Network Services.", vbCrLf))
+            messageBox.ShowDialog()
             attempts = 0
             Return
         End If

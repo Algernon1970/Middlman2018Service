@@ -18,7 +18,7 @@ Public Class CommandHandler
     End Sub
 
     Public Function GetVersion() As String
-        Return "Version 2018.34rc"
+        Return "Version 2018.36rc"
     End Function
 
     Public Function Test(ByVal cmdline As String) As String

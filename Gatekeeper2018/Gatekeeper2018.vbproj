@@ -102,6 +102,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DialogueScreen.xaml.vb">
+      <DependentUpon>DialogueScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Drives.vb" />
     <Compile Include="GlobalSuppressions.vb" />
     <Compile Include="Password.xaml.vb">
@@ -110,6 +113,10 @@
     <Compile Include="PrinterMapper.vb" />
     <Compile Include="SharedModule.vb" />
     <Compile Include="WebLoader.vb" />
+    <Page Include="DialogueScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

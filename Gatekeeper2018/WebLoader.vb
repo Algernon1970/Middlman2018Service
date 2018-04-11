@@ -4,7 +4,7 @@ Module WebLoader
 
     Public Function Request(ByVal url As String) As String
         Dim browser As New WebClient
-        browser.Encoding = System.Text.Encoding.Unicode
+        browser.Encoding = System.Text.Encoding.UTF8
         If Not browser.Headers.ToString.Contains("ASHBYSCHOOL") Then
             browser.Headers.Add("x-ashbyauth", "ASHBYSCHOOL")
         End If

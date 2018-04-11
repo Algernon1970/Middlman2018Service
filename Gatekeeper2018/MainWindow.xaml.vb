@@ -257,9 +257,10 @@ Class MainWindow
 
             End If
         Next
-        ' WebLoader.Request(WEB_URL & WEB_RecordDrives & rlist)
+        WebLoader.Request(WEB_URL & WEB_RecordDrives & rlist)
         If rlist.Length = monitoredDrives.Length Then
             NotifyIcon.Icon = My.Resources.greencloud
+
             NotifyIcon.HideBalloonTip()
         Else
             NotifyIcon.Icon = My.Resources.redcloud
@@ -268,6 +269,7 @@ Class MainWindow
     End Sub
 
     Private Sub MapZ()
+        Log("MAPZ: running", EventLogEntryType.Information)
         Dim outline As String = ""
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
@@ -288,11 +290,14 @@ Class MainWindow
         If (Not worked) And logging Then
             Log("MAPZ: " & err, EventLogEntryType.Warning)
         End If
+        Log("MAPZ: Got Cookie", EventLogEntryType.Information)
         DoMap(New Uri("https://ashbyschool-my.sharepoint.com"), "z:", username, passwd, True)
         DoMap(New Uri("https://ashbyschool-my.sharepoint.com"), "z:", username, passwd, True)
+        Log("MAPZ: Finished", EventLogEntryType.Information)
     End Sub
 
     Private Sub MapY()
+        Log("MAPY: running", EventLogEntryType.Information)
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
         Dim passwd As String = PasswordHandler.LoadPWE
@@ -311,9 +316,11 @@ Class MainWindow
             Log("MAPY: " & err, EventLogEntryType.Warning)
         End If
         DoMap(New Uri("https://ashbyschool.sharepoint.com/StudentShared"), "y:", username, passwd, False)
+        Log("MAPY: Finished", EventLogEntryType.Information)
     End Sub
 
     Private Sub MapV()
+        Log("MAPV: running", EventLogEntryType.Information)
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
         Dim passwd As String = PasswordHandler.LoadPWE
@@ -332,9 +339,11 @@ Class MainWindow
             Log("MAPV: " & err, EventLogEntryType.Warning)
         End If
         DoMap(New Uri("https://ashbyschool.sharepoint.com/StaffShared"), "v:", username, passwd, False)
+        Log("MAPV: Finished", EventLogEntryType.Information)
     End Sub
 
     Private Sub MapS()
+        Log("MAPS: running", EventLogEntryType.Information)
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
         Dim passwd As String = PasswordHandler.LoadPWE
@@ -353,9 +362,13 @@ Class MainWindow
             Log("MAPS: " & err, EventLogEntryType.Warning)
         End If
         DoMap(New Uri("https://ashbyschool.sharepoint.com/SLT/SLTDocs"), "s:", username, passwd, False)
+        Log("MAPS: Finished", EventLogEntryType.Information)
     End Sub
 
     Private Sub DoMap(sharepointUri As Uri, disk As String, username As String, passwd As String, mount As Boolean)
+        If logging Then
+            Log(String.Format("DoMap: {0} running", disk), EventLogEntryType.Information)
+        End If
         Dim homedir As String = ""
         If mount Then
             Dim user As String = username.Split(CType("@", Char()))(0)
@@ -378,8 +391,10 @@ Class MainWindow
         }
         Process.Start()
 
-        Process.WaitForExit()
-
+        Dim worked As Boolean = Process.WaitForExit(10000)
+        If logging Then
+            Log(String.Format("DoMap: {0}", If(worked, "Worked", "Didnt Work")), EventLogEntryType.Information)
+        End If
         Dim err As String = Process.StandardError.ReadToEnd
         Dim output As String = Process.StandardOutput.ReadToEnd()
         If logging Then

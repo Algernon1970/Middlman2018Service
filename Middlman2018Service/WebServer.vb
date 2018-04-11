@@ -35,7 +35,7 @@ Public Class WebServer
     Private Sub Respond(ByRef c As HttpListenerContext, ByVal response As String)
         Dim log As EventLog = GetLogger()
         Try
-            Dim buffer() As Byte = Encoding.Unicode.GetBytes(response)
+            Dim buffer() As Byte = Encoding.UTF8.GetBytes(response)
             c.Response.ContentLength64 = buffer.Length
             Dim output As System.IO.Stream = c.Response.OutputStream
             output.Write(buffer, 0, buffer.Length)
@@ -53,10 +53,10 @@ Public Class WebServer
         Dim eLog As EventLog = GetLogger()
         Try
             If IsNothing(c.Request.QueryString("params")) Then
-                eLog.WriteEntry(String.Format("HandleCommands: {0}", c.Request.QueryString("command")))
+                'eLog.WriteEntry(String.Format("HandleCommands: {0}", c.Request.QueryString("command")))
                 Return CStr(CallByName(New CommandHandler, c.Request.QueryString("command"), Microsoft.VisualBasic.CallType.Method))
             Else
-                eLog.WriteEntry(String.Format("HandleCommands: {0} & {1}", c.Request.QueryString("command"), c.Request.QueryString("params")))
+                'eLog.WriteEntry(String.Format("HandleCommands: {0} & {1}", c.Request.QueryString("command"), c.Request.QueryString("params")))
                 Return CStr(CallByName(New CommandHandler, c.Request.QueryString("command"), Microsoft.VisualBasic.CallType.Method, c.Request.QueryString("params")))
             End If
 

@@ -18,7 +18,7 @@ Public Class CommandHandler
     End Sub
 
     Public Function GetVersion() As String
-        Return "Version 2018.6"
+        Return "Version 2018.7.1"
     End Function
 
     Public Function Test(ByVal cmdline As String) As String
@@ -132,8 +132,18 @@ Public Class CommandHandler
         Return SharedData.PersonTableAdapter.GetPersonBySam(sam)
     End Function
 
+    Public Function GetAllPrinters() As String
+        WriteLog("Starting GetAllPrinters", EventLogEntryType.Information)
+        Dim ret As String = ""
+        Dim ptable As DataTable = SharedData.PrinterTableAdapter.GetDataByUserSelectable()
+        For Each row As DataRow In ptable.Rows
+            ret = String.Format("{0},{1}", ret, row.Field(Of String)("Name"))
+        Next
+        Return ret
+    End Function
+
     Public Function GetPrinterList() As String
-        WriteLog("Starting GetPrinterList", EventLogEntryType.Error)
+        WriteLog("Starting GetPrinterList", EventLogEntryType.Information)
         Try
             Dim pList As String = ","
             Dim cid As Integer = Integer.Parse(GetComputerID())

@@ -48,6 +48,7 @@
                 <ContextMenu Background="LightBlue">
                     <MenuItem x:Name="MapDrivesButton" Header="Map Drives" />
                     <MenuItem x:Name="PasswordButton" Header="Password" />
+                    <MenuItem x:Name="AddPrinterButton" Header="Add Printer" />
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>

@@ -24,6 +24,7 @@ Class MainWindow
     Private Const WEB_MusicRedirect As String = "MusicRedirect"
     Private Const WEB_Logout As String = "ForceLogout"
     Private Const WEB_GetVersion As String = "GetVersion"
+    Private Const WEB_GetAllPrinters As String = "GetAllPrinters"
 #End Region
 #Region "Threads"
     Private ReadOnly PrintMapper As New BackgroundWorker()
@@ -67,6 +68,8 @@ Class MainWindow
         MapDrivesButton.IsEnabled = False
         PasswordButton.Header = "Offline"
         PasswordButton.IsEnabled = False
+        AddPrinterButton.Visibility = Visibility.Hidden
+        AddPrinterButton.IsEnabled = False
         NotifyIcon.Icon = My.Resources.whitecloud
         Dim pwdString As String = "none"
         pwdString = PasswordHandler.LoadPW
@@ -482,6 +485,13 @@ Class MainWindow
 #End Region
 
 #Region "UI"
+    Private Sub AddPrinters_Click(sender As Object, e As RoutedEventArgs) Handles AddPrinterButton.Click
+        Dim plist As String = WebLoader.Request(WEB_URL & WEB_GetAllPrinters)
+        Dim PC As New PrinterChooser
+        PC.Show()
+        PC.DisplayList(plist)
+    End Sub
+
     Private Sub PasswordButton_Click(sender As Object, e As RoutedEventArgs) Handles PasswordButton.Click
         Dim ret As String = WebLoader.Request(WEB_URL & WEB_CheckOnline)
         If ret.ToLower.Equals("ashby domain") Then
@@ -504,8 +514,14 @@ Class MainWindow
     End Sub
 
     Private Sub AcceptButton_Click(sender As Object, e As RoutedEventArgs) Handles AcceptButton.Click
+        Dim ret As String
         WebLoader.Request(WEB_URL & WEB_MusicRedirect)
         Me.Visibility = Visibility.Hidden
+        ret = WebLoader.Request(WEB_URL & WEB_GetGroups)
+        If ret.Contains("AS All Staff") Then
+            AddPrinterButton.Visibility = Visibility.Visible
+            AddPrinterButton.IsEnabled = True
+        End If
         Explorer.RunWorkerAsync()
     End Sub
 

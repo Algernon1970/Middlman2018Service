@@ -488,6 +488,9 @@ Class MainWindow
     Private Sub AddPrinters_Click(sender As Object, e As RoutedEventArgs) Handles AddPrinterButton.Click
         Dim plist As String = WebLoader.Request(WEB_URL & WEB_GetAllPrinters)
         Dim PC As New PrinterChooser
+        Dim workArea As Rect = System.Windows.SystemParameters.WorkArea
+        PC.Left = workArea.Right - PC.Width
+        PC.Top = workArea.Bottom - PC.Height
         PC.Show()
         PC.DisplayList(plist)
     End Sub

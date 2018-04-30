@@ -18,7 +18,7 @@ Public Class CommandHandler
     End Sub
 
     Public Function GetVersion() As String
-        Return "Version 2018.7.1"
+        Return "Version 2018.8"
     End Function
 
     Public Function Test(ByVal cmdline As String) As String
@@ -26,7 +26,6 @@ Public Class CommandHandler
     End Function
 
     Public Function SetUser(ByVal params As String) As String
-
         SharedData.currentUser = params
         If SharedData.AmIOnDomain.Equals("Ashby Domain") Then
             Dim pr As DataTable = SharedData.PersonTableAdapter.GetPersonBySam(SharedData.currentUser)
@@ -126,6 +125,7 @@ Public Class CommandHandler
         SharedData.PersonTableAdapter.CreatePerson(upx.GivenName, upx.Surname, sam, upx.Sid.ToString, upx.EmployeeId, Now)
         Return SharedData.PersonTableAdapter.GetPersonBySam(sam)
     End Function
+
     Private Function UpdateUserRecord(ByVal sam As String) As DataTable
         Dim upx As UserPrincipalex = getUserPrincipalexbyUsername(userCTX, sam)
         SharedData.PersonTableAdapter.UpdateUser(upx.GivenName, upx.Surname, upx.Sid.ToString, upx.EmployeeId, Now, sam)
@@ -183,6 +183,26 @@ Public Class CommandHandler
         End If
     End Function
 
+    Public Function GetPrinterNameByConnection(ByRef con As String) As String
+        Dim printTable As DataTable = SharedData.PrinterTableAdapter.GetPrinterByConnection(con)
+        If printTable.Rows.Count > 0 Then
+            Return printTable.Rows(0).Field(Of String)("Name")
+        Else
+            Return "No Printer (GetPrinterName)"
+        End If
+    End Function
+
+    Public Function GetPrinterID(ByRef name As String) As String
+        Dim sname = name.Replace("'", "")
+        Dim printTable As DataTable = SharedData.PrinterTableAdapter.GetDataByName(sname)
+        If printTable.Rows.Count > 0 Then
+            Return String.Format("{0}", printTable.Rows(0).Field(Of Integer)("PrinterID"))
+        Else
+            Return "No Printer (GetPID)"
+        End If
+
+    End Function
+
     Public Function GetPrinterConnection(ByRef pid As String) As String
         Dim printTable As DataTable = SharedData.PrinterTableAdapter.GetPrinterByID(Integer.Parse(pid))
         If printTable.Rows.Count > 0 Then
@@ -191,6 +211,37 @@ Public Class CommandHandler
             Return "No Printer (GetPrinterConnection)"
         End If
     End Function
+
+    Public Function DeletePrinter(ByRef params As String) As String
+        Dim cid As String = params.Split(","c)(0)
+        Dim pid As String = params.Split(","c)(1)
+        Dim linkTable As DataTable = SharedData.PrinterLinkTableAdapter.GetPrinterLink(Integer.Parse(cid), Integer.Parse(pid))
+        Dim lid As Integer = linkTable.Rows(0).Field(Of Integer)("ID")
+        SharedData.PrinterLinkTableAdapter.DeleteAssignByID(lid)
+        Return "ok"
+    End Function
+
+    Public Function UpdateDefaultPrinter(ByRef params As String) As String
+        Dim cid As String = params.Split(","c)(0)
+        Dim pid As String = params.Split(","c)(1)
+        Dim def As String = params.Split(","c)(2)
+        SharedData.PrinterLinkTableAdapter.UpdateDefault(If(def.Equals("True"), True, False), Integer.Parse(cid), Integer.Parse(pid))
+        Return "ok"
+    End Function
+
+    Public Function AddPrinter(ByRef params As String) As String
+        Dim cid As String = params.Split(","c)(0)
+        Dim pid As String = params.Split(","c)(1)
+        Dim def As String = params.Split(","c)(2)
+        SharedData.PrinterLinkTableAdapter.AssignPrinter(Integer.Parse(cid), Integer.Parse(pid), If(def.Equals("True"), True, False))
+        Return "ok"
+    End Function
+
+    Public Function RemoveDefaultPrinter(ByRef params As String) As String
+        SharedData.PrinterLinkTableAdapter.RemoveDefaultForComputer(Integer.Parse(params))
+        Return "ok"
+    End Function
+
 
     Public Function LockWorkstation() As String
         If Environment.Is64BitOperatingSystem Then

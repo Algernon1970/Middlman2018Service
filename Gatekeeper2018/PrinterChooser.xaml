@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gatekeeper2018"
         mc:Ignorable="d"
-        Title="Printer Chooser" Height="450" Width="500" Background="#FF005A9E" Loaded="Window_Loaded" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True">
+        Title="Printer Chooser" Height="450" Width="520" Background="#FF005A9E" Loaded="Window_Loaded" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True">
 
     <Window.Resources>
         <ControlTemplate x:Key="ButtonControlTemplate1" TargetType="{x:Type Button}">
@@ -52,12 +52,14 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="175"/>
                     <ColumnDefinition Width="175"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding Name}"/>
-                <Button Grid.Column="1" Content="{Binding AllocatedButton}" Background="{Binding AColour}" Click="Button_Click"/>
-                <Button Grid.Column="2" Content="{Binding SessionButton}" Background="{Binding SColour}" Click="Button_Click"/>
+                <CheckBox Grid.Column="1" IsChecked="{Binding SetDefault}" Visibility="{Binding Vis}" Checked="Default_Clicked" Unchecked="Default_Clicked"/>
+                <Button Grid.Column="2" Content="{Binding AllocatedButton}" Background="{Binding AColour}" Click="Button_Click"/>
+                <Button Grid.Column="3" Content="{Binding SessionButton}" Background="{Binding SColour}" Click="Button_Click"/>
 
             </Grid>
         </DataTemplate>

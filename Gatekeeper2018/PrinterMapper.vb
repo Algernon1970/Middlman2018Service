@@ -22,4 +22,13 @@ Module PrinterMapper
     Public Sub SetDefaultPrinter(ByVal connectionString As String)
         _SetDefaultPrinter(connectionString)
     End Sub
+
+    Public Function UnMapPrinter(ByVal connectionString As String) As String
+        If DeletePrinterConnection(connectionString) <> 0 Then
+            Return "OK"
+        Else
+            Return Err.LastDllError.ToString
+        End If
+    End Function
+
 End Module

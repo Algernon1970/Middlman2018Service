@@ -1,31 +1,11 @@
 ﻿Imports System.ComponentModel
+Imports System.Drawing.Printing
 Imports System.IO
 Imports GatekeeperTools
 Imports Hardcodet.Wpf.TaskbarNotification
 
 Class MainWindow
-#Region "Constants"
-    Private Const WEB_URL As String = "http://127.0.0.1:1701/?command="
-    Private Const WEB_SetName As String = "setuser&params="
-    Private Const WEB_CheckOnline As String = "recheckonline"
-    Private Const WEB_GetComputerID As String = "getcomputerid"
-    Private Const WEB_GetPrinterList As String = "getprinterlist"
-    Private Const WEB_GetPrinterConnection As String = "getprinterconnection&params="
-    Private Const WEB_IsPrivileged As String = "isprivuser"
-    Private Const WEB_CopyPrivFile As String = "getpriv"
-    Private Const WEB_SetPrivs As String = "setpriv"
-    Private Const WEB_GetGroups As String = "getusergroups"
-    Private Const WEB_UnHookGatekeeper As String = "hookgatekeeper&params=off"
-    Private Const WEB_HookGatekeeper As String = "hookgatekeeper&params=on"
-    Private Const WEB_GPUpdate As String = "GPUpdate"
-    Private Const WEB_CopyMOTD As String = "GetMOTD"
-    Private Const WEB_RecordDrives As String = "RecordDrives&params="
-    Private Const WEB_LocalAdmin As String = "LocalAdmin&params="
-    Private Const WEB_MusicRedirect As String = "MusicRedirect"
-    Private Const WEB_Logout As String = "ForceLogout"
-    Private Const WEB_GetVersion As String = "GetVersion"
-    Private Const WEB_GetAllPrinters As String = "GetAllPrinters"
-#End Region
+
 #Region "Threads"
     Private ReadOnly PrintMapper As New BackgroundWorker()
     Private ReadOnly PrivUserMapper As New BackgroundWorker()
@@ -432,6 +412,12 @@ Class MainWindow
 
 #Region "Printers"
     Private Sub MapPrinters(sender As Object, e As DoWorkEventArgs)
+        'remove stale printers
+        For Each installedPrinter As String In PrinterSettings.InstalledPrinters
+            If installedPrinter.StartsWith("\\") Then
+                UnMapPrinter(installedPrinter)
+            End If
+        Next
         Dim plist As List(Of Pinfo) = GetPrinterConnectionList()
         Dim res As String
         For Each printer As Pinfo In plist
@@ -486,13 +472,8 @@ Class MainWindow
 
 #Region "UI"
     Private Sub AddPrinters_Click(sender As Object, e As RoutedEventArgs) Handles AddPrinterButton.Click
-        Dim plist As String = WebLoader.Request(WEB_URL & WEB_GetAllPrinters)
         Dim PC As New PrinterChooser
-        Dim workArea As Rect = System.Windows.SystemParameters.WorkArea
-        PC.Left = workArea.Right - PC.Width
-        PC.Top = workArea.Bottom - PC.Height
         PC.Show()
-        PC.DisplayList(plist)
     End Sub
 
     Private Sub PasswordButton_Click(sender As Object, e As RoutedEventArgs) Handles PasswordButton.Click

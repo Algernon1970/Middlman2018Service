@@ -43,6 +43,12 @@ Class MainWindow
         End If
     End Sub
 
+    Private Sub ReportBroken()
+        Dim brokenWindow As New NoServiceWindow
+        Me.Hide()
+        brokenWindow.Show()
+    End Sub
+
     Private Sub Setup()
         MapDrivesButton.Header = "Mapping Drives..."
         MapDrivesButton.IsEnabled = False
@@ -56,6 +62,9 @@ Class MainWindow
         Dim ret As String = ""
         Try
             ret = WebLoader.Request(WEB_URL & WEB_GetVersion)
+            If ret.Equals("ConnectionError") Then
+                ReportBroken()
+            End If
             VersionLabel.Content = String.Format("{0}", ret)
             ret = WebLoader.Request(WEB_URL & WEB_CheckOnline)
             statusLabel.Content = ret
@@ -494,15 +503,14 @@ Class MainWindow
     End Sub
 
     Private Sub GatekeeperMainWindow_Closed(sender As Object, e As EventArgs) Handles GatekeeperMainWindow.Closed
-
+        Log("Gatekeeper Closed", EventLogEntryType.Error)
     End Sub
 
     Private Sub AcceptButton_Click(sender As Object, e As RoutedEventArgs) Handles AcceptButton.Click
         Dim ret As String
-        WebLoader.Request(WEB_URL & WEB_MusicRedirect)
         Me.Visibility = Visibility.Hidden
         ret = WebLoader.Request(WEB_URL & WEB_GetGroups)
-        If ret.Contains("AS All Staff") Then
+        If ret.Contains("Domain Admins") Or (ret.Contains("AS All Staff") And isLaptop()) Then
             AddPrinterButton.Visibility = Visibility.Visible
             AddPrinterButton.IsEnabled = True
         End If
@@ -513,6 +521,12 @@ Class MainWindow
         WebLoader.Request(WEB_URL & WEB_Logout)
     End Sub
 #End Region
+
+    Private Function IsLaptop() As Boolean
+        Dim ret As String = WebLoader.Request(WEB_URL & WEB_IsLaptop)
+        Return If(ret.Equals("True"), True, False)
+
+    End Function
 End Class
 
 Structure Pinfo

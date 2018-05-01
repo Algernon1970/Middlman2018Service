@@ -14,6 +14,7 @@ Module WebLoader
             'Log(String.Format("Request: {0}", url), EventLogEntryType.Information)
         Catch ex As Exception
             Log(String.Format("Request ERROR: {0} - {1}", url, ex.Message), EventLogEntryType.Error)
+            Return "ConnectionError"
         End Try
         Return ret
     End Function

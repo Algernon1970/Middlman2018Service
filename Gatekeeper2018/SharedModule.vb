@@ -36,6 +36,7 @@
     Public Const WEB_DeletePrinter As String = "DeletePrinter&params="
     Public Const WEB_UpdateDefaultPrinter As String = "UpdateDefaultPrinter&params="
     Public Const WEB_RemoveDefaultByComputer As String = "RemoveDefaultPrinter&params="
+    Public Const WEB_IsLaptop As String = "IsLaptop"
 #End Region
 
     Public eLog As EventLog = Nothing

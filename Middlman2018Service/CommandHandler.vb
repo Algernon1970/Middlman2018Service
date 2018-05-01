@@ -18,7 +18,7 @@ Public Class CommandHandler
     End Sub
 
     Public Function GetVersion() As String
-        Return "Version 2018.8"
+        Return "Version 2018.8.2"
     End Function
 
     Public Function Test(ByVal cmdline As String) As String
@@ -118,6 +118,16 @@ Public Class CommandHandler
             End If
         Next
         Return grpList
+    End Function
+
+    Public Function IsLaptop() As String
+        Dim grp As GroupPrincipal = getGroupPrincipalbyName(groupsCTX, "AS Laptops")
+        Dim cmp As ComputerPrincipal = getComputerPrincipalByName(computerCTX, My.Computer.Name)
+        If grp.Members.Contains(cmp) Then
+            Return "True"
+        Else
+            Return "False"
+        End If
     End Function
 
     Private Function CreateUserRecord(ByVal sam As String) As DataTable
@@ -241,7 +251,6 @@ Public Class CommandHandler
         SharedData.PrinterLinkTableAdapter.RemoveDefaultForComputer(Integer.Parse(params))
         Return "ok"
     End Function
-
 
     Public Function LockWorkstation() As String
         If Environment.Is64BitOperatingSystem Then

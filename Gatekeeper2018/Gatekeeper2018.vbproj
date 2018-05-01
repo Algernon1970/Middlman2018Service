@@ -107,6 +107,9 @@
     </Compile>
     <Compile Include="Drives.vb" />
     <Compile Include="GlobalSuppressions.vb" />
+    <Compile Include="NoServiceWindow.xaml.vb">
+      <DependentUpon>NoServiceWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Password.xaml.vb">
       <DependentUpon>Password.xaml</DependentUpon>
     </Compile>
@@ -132,6 +135,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NoServiceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Password.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

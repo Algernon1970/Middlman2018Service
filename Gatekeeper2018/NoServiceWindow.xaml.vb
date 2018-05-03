@@ -1,5 +1,5 @@
 ﻿Public Class NoServiceWindow
     Private Sub LogoutButton_Click(sender As Object, e As RoutedEventArgs) Handles LogoutButton.Click
-        WebLoader.Request(WEB_URL & WEB_Logout)
+        System.Diagnostics.Process.Start("ShutDown", "/r /t 00")
     End Sub
 End Class

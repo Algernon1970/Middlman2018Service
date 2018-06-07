@@ -28,7 +28,7 @@ Public Class Password
             attempts = 0
             Return
         End If
-        Dim enc As New Simple3Des("A$hbySchool1")
+        Dim enc As New Simple3Des(EncryptionPW)
         If CheckPW(pwd) Then
             attempts = 0
             Status = True
@@ -69,7 +69,7 @@ Public Class Password
         If File.Exists("N:\\My Settings\\Ashby School\\cpd.ash") Then
             Dim w As New StreamReader(File.Open("N:\\My Settings\\Ashby School\\cpd.ash", FileMode.Open))
             Dim encoded As String = w.ReadLine()
-            Dim decoder As New Simple3Des("A$hbySchool1")
+            Dim decoder As New Simple3Des(EncryptionPW)
             w.Close()
             w.Dispose()
 

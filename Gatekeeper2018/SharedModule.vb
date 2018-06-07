@@ -7,6 +7,7 @@
     Public Const AllocateUnSet As String = "Remove Printer"
     Public Const SetColour As String = "#FF158CE6"
     Public Const UnSetColour As String = "#FF7AB4E0"
+    Public Const EncryptionPW As String = "A$hbySchool1"
 
 #Region "Web Comms Constants"
     Public Const WEB_URL As String = "http://127.0.0.1:1701/?command="

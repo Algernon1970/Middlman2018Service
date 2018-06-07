@@ -25,8 +25,6 @@ Public Class PrinterChooser
             End If
         Next
 
-        'Mark Printers
-
         MarkSessionPrinters()
         MarkAssginedPrinters()
         ShowPrivatePrinters()

@@ -18,11 +18,7 @@ Public Class CommandHandler
     End Sub
 
     Public Function GetVersion() As String
-        Return "Version 2018.8.4"
-    End Function
-
-    Public Function Test(ByVal cmdline As String) As String
-        Return "Test got " & cmdline
+        Return "Version 2018.11.a5"
     End Function
 
     Public Function SetUser(ByVal params As String) As String
@@ -299,9 +295,9 @@ Public Class CommandHandler
             RegEdit.WriteReg(op)
             op.path = "Software\Microsoft\Windows\CurrentVersion\Explorer\Environment"
             RegEdit.WriteReg(op)
-        Else
-            WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoBackGroundPolicy=0|dword")
-            WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoGPOListChanges=0|dword")
+            'Else
+            '    WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoBackGroundPolicy=0|dword")
+            '    WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoGPOListChanges=0|dword")
         End If
         WriteLog(If(music, applocation, "Ordinary Redirect"), EventLogEntryType.Information)
         Return "OK Redirect"
@@ -412,6 +408,8 @@ Public Class CommandHandler
         Dim pid As Integer = Integer.Parse(GetPersonID())
         Dim count As Integer = SharedData.PersonLinkTableAdapter.PrivExists(cid, pid)
         If count > 0 Then
+            WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoBackGroundPolicy=1|dword")
+            WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoGPOListChanges=1|dword")
             Return "True"
         Else
             Return "False"
@@ -459,6 +457,8 @@ Public Class CommandHandler
     End Function
 
     Public Function SetPriv() As String
+        WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoBackGroundPolicy=1|dword")
+        WriteReg("HKLM\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\NoGPOListChanges=1|dword")
         Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) & "\Ashby School\privsfile.txt"
         Dim line As String = ""
         Dim regvalue As String = ""

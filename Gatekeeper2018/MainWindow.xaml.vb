@@ -12,6 +12,8 @@ Class MainWindow
     Private ReadOnly OneDriveMapper As New BackgroundWorker()
     Private ReadOnly DriveMonitor As New BackgroundWorker()
     Private ReadOnly Explorer As New BackgroundWorker()
+    Private WithEvents AutoLogoutTimer As New BackgroundWorker()
+
 #End Region
 #Region "State"
     Private PasswordHandler As New Password
@@ -20,7 +22,16 @@ Class MainWindow
     Dim cid As Integer
     Dim online As Boolean = False
     Dim monitoredDrives As String = "ZY"
+    Dim timerOn As Boolean = True
+    Dim onlinestatus As String = "none"
 #End Region
+
+    Private Sub BGProgress(ByVal sender As Object, e As ProgressChangedEventArgs) Handles AutoLogoutTimer.ProgressChanged
+        If e.ProgressPercentage = 100 Then
+            WebLoader.Request(WEB_URL & WEB_Logout)
+        End If
+        AutoLogoutBar.Value = 100 - e.ProgressPercentage
+    End Sub
 
 #Region "Startup"
     Private Sub GatekeeperMainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles GatekeeperMainWindow.Loaded
@@ -33,7 +44,12 @@ Class MainWindow
         AddHandler OneDriveMapper.RunWorkerCompleted, AddressOf MapDrivesComplete
         AddHandler DriveMonitor.DoWork, AddressOf HandleDriveMonitor
         AddHandler Explorer.DoWork, AddressOf HandleExplorerStart
-        OneDriveMapper.WorkerReportsProgress = True
+        AddHandler AutoLogoutTimer.DoWork, AddressOf AutoLogoutTimerThread
+
+
+        AutoLogoutTimer.WorkerReportsProgress = True
+        AutoLogoutTimer.RunWorkerAsync()
+        'OneDriveMapper.WorkerReportsProgress = True
         OneDriveMapper.RunWorkerAsync()
         DriveMonitor.RunWorkerAsync()
 
@@ -68,6 +84,7 @@ Class MainWindow
             VersionLabel.Content = String.Format("{0}", ret)
             ret = WebLoader.Request(WEB_URL & WEB_CheckOnline)
             statusLabel.Content = ret
+            onlinestatus = ret
             If ret.ToLower.Equals("ashby domain") Then
                 Log("Setup: Showing online", EventLogEntryType.Warning)
                 online = True
@@ -112,6 +129,16 @@ Class MainWindow
             PasswordHandler.ShowDialog()
             Me.Visibility = Visibility.Visible
         End Try
+    End Sub
+
+    Private Sub AutoLogoutTimerThread(sender As Object, e As DoWorkEventArgs)
+        For countdown = 0 To 100
+            If Not timerOn Then
+                Return
+            End If
+            AutoLogoutTimer.ReportProgress(countdown)
+            Threading.Thread.Sleep(1000)
+        Next
     End Sub
 
     Private Sub HandlePrivUser(sender As Object, e As DoWorkEventArgs)
@@ -161,47 +188,50 @@ Class MainWindow
         Dim bg As BackgroundWorker = CType(sender, BackgroundWorker)
         Log("MapDrivesButton: Autorun", EventLogEntryType.Information)
         DoMapDrives()
-
     End Sub
 
     Private Sub DoMapDrives()
-        Dim passwd As String = PasswordHandler.LoadPW
-        If passwd.Equals("NOPWD") Then
-            Log("DoMapDrives: Skipping Mapping Drives.  No password specified (offline)", EventLogEntryType.Warning)
-            Return
+        If onlinestatus.ToLower.Contains("ashby domain") Then
+            Dim passwd As String = PasswordHandler.LoadPW
+            If passwd.Equals("NOPWD") Then
+                Log("DoMapDrives: Skipping Mapping Drives.  No password specified (offline)", EventLogEntryType.Warning)
+                Return
+            End If
+            MapZ()
+            Log("DoMapDrives: Map Z", EventLogEntryType.Information)
+            MapY()
+            Log("DoMapDrives: Map Y", EventLogEntryType.Information)
+
+            Try
+                Dim glist As String
+                If online Then
+                    glist = WebLoader.Request(WEB_URL & WEB_GetGroups)
+                    WriteGroups(glist)
+                Else
+                    glist = ReadGroups()
+                End If
+
+                If glist.ToLower.Contains("staff") Then
+                    MapV()
+                    monitoredDrives = monitoredDrives & "V"
+                    Log("DoMapDrives: Map V", EventLogEntryType.Information)
+                End If
+                If glist.ToLower.Contains("slt") Then
+                    MapS()
+                    monitoredDrives = monitoredDrives & "S"
+                    Log("DoMapDrives: Map S", EventLogEntryType.Information)
+                End If
+            Catch ex As Exception
+                Log("DoMapDrives: Error " & ex.Message, EventLogEntryType.Error)
+            End Try
+        Else
+            Log("MapDrivesButton: Not done, offline", EventLogEntryType.Information)
         End If
-        MapZ()
-        Log("DoMapDrives: Map Z", EventLogEntryType.Information)
-        MapY()
-        Log("DoMapDrives: Map Y", EventLogEntryType.Information)
-
-        Try
-            Dim glist As String
-            If online Then
-                glist = WebLoader.Request(WEB_URL & WEB_GetGroups)
-                WriteGroups(glist)
-            Else
-                glist = ReadGroups()
-            End If
-
-            If glist.ToLower.Contains("staff") Then
-                MapV()
-                monitoredDrives = monitoredDrives & "V"
-                Log("DoMapDrives: Map V", EventLogEntryType.Information)
-            End If
-            If glist.ToLower.Contains("slt") Then
-                MapS()
-                monitoredDrives = monitoredDrives & "S"
-                Log("DoMapDrives: Map S", EventLogEntryType.Information)
-            End If
-        Catch ex As Exception
-
-        End Try
     End Sub
 
     Private Sub WriteGroups(ByRef glist As String)
         Dim path As String = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\Ashby School\"
-        Dim encoder As New Simple3Des("A$hbySchool1")
+        Dim encoder As New Simple3Des(EncryptionPW)
         Dim encGList As String = encoder.EncryptData(glist)
         If Not Directory.Exists(path) Then
             Directory.CreateDirectory(path)
@@ -217,7 +247,7 @@ Class MainWindow
         If File.Exists(path & "groups.ash") Then
             Dim w As New StreamReader(File.Open(path & "groups.ash", FileMode.Open))
             Dim encoded As String = w.ReadLine()
-            Dim decoder As New Simple3Des("A$hbySchool1")
+            Dim decoder As New Simple3Des(EncryptionPW)
             w.Close()
             w.Dispose()
 
@@ -256,17 +286,25 @@ Class MainWindow
             NotifyIcon.HideBalloonTip()
         Else
             NotifyIcon.Icon = My.Resources.redcloud
-            NotifyIcon.ShowBalloonTip("Drive Mapper", "Not all drives mapped.", BalloonIcon.Error)
+            'NotifyIcon.ShowBalloonTip("Drive Mapper", "Not all drives mapped.", BalloonIcon.Error)
         End If
     End Sub
 
+    ''' <summary>
+    ''' Needs to be made 32bit safe.  Filepath for ascookieintegrated 
+    ''' </summary>
     Private Sub MapZ()
         Log("MAPZ: running", EventLogEntryType.Information)
         Dim outline As String = ""
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
         Dim passwd As String = PasswordHandler.LoadPWE
-        p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        If Environment.Is64BitOperatingSystem Then
+            p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        Else
+            p.FileName = "C:\Program Files\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        End If
+
         p.UseShellExecute = False
         p.RedirectStandardOutput = True
         p.RedirectStandardError = True
@@ -293,7 +331,11 @@ Class MainWindow
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
         Dim passwd As String = PasswordHandler.LoadPWE
-        p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        If Environment.Is64BitOperatingSystem Then
+            p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        Else
+            p.FileName = "C:\Program Files\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        End If
         p.WindowStyle = ProcessWindowStyle.Hidden
         p.UseShellExecute = False
         p.RedirectStandardOutput = True
@@ -316,7 +358,11 @@ Class MainWindow
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
         Dim passwd As String = PasswordHandler.LoadPWE
-        p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        If Environment.Is64BitOperatingSystem Then
+            p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        Else
+            p.FileName = "C:\Program Files\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        End If
         p.WindowStyle = ProcessWindowStyle.Hidden
         p.UseShellExecute = False
         p.RedirectStandardOutput = True
@@ -339,7 +385,11 @@ Class MainWindow
         Dim p As New ProcessStartInfo
         Dim username As String = Environment.UserName & "@ashbyschool.org.uk"
         Dim passwd As String = PasswordHandler.LoadPWE
-        p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        If Environment.Is64BitOperatingSystem Then
+            p.FileName = "C:\Program Files (x86)\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        Else
+            p.FileName = "C:\Program Files\Ashby School\MiddlemanInstaller\ASCookieIntegrated.exe"
+        End If
         p.WindowStyle = ProcessWindowStyle.Hidden
         p.UseShellExecute = False
         p.RedirectStandardOutput = True
@@ -507,10 +557,12 @@ Class MainWindow
     End Sub
 
     Private Sub AcceptButton_Click(sender As Object, e As RoutedEventArgs) Handles AcceptButton.Click
+        timerOn = False
         Dim ret As String
         Me.Visibility = Visibility.Hidden
+        ret = WebLoader.Request(WEB_URL & WEB_MusicRedirect)
         ret = WebLoader.Request(WEB_URL & WEB_GetGroups)
-        If ret.Contains("Domain Admins") Or (ret.Contains("AS All Staff") And isLaptop()) Then
+        If ret.Contains("Domain Admins") Or (ret.Contains("Staff") And IsLaptop()) Then
             AddPrinterButton.Visibility = Visibility.Visible
             AddPrinterButton.IsEnabled = True
         End If
@@ -518,6 +570,7 @@ Class MainWindow
     End Sub
 
     Private Sub DeclineButton_Click(sender As Object, e As RoutedEventArgs) Handles DeclineButton.Click
+        timerOn = False
         WebLoader.Request(WEB_URL & WEB_Logout)
     End Sub
 #End Region

@@ -18,7 +18,7 @@ Public Class CommandHandler
     End Sub
 
     Public Function GetVersion() As String
-        Return "Version 2018.11.a5"
+        Return "Version 2018.11.a8"
     End Function
 
     Public Function SetUser(ByVal params As String) As String

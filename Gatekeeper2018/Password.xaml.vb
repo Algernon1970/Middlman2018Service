@@ -67,13 +67,19 @@ Public Class Password
     ''' <returns></returns>
     Public Function LoadPW() As String
         If File.Exists("N:\\My Settings\\Ashby School\\cpd.ash") Then
-            Dim w As New StreamReader(File.Open("N:\\My Settings\\Ashby School\\cpd.ash", FileMode.Open))
-            Dim encoded As String = w.ReadLine()
-            Dim decoder As New Simple3Des(EncryptionPW)
-            w.Close()
-            w.Dispose()
+            Try
+                Dim w As New StreamReader(File.Open("N:\\My Settings\\Ashby School\\cpd.ash", FileMode.Open))
+                Dim encoded As String = w.ReadLine()
+                Dim decoder As New Simple3Des(EncryptionPW)
+                w.Close()
+                w.Dispose()
 
-            Return decoder.DecryptData(encoded)
+                Return decoder.DecryptData(encoded)
+            Catch ex As Exception
+                Dim messageBox As New DialogueScreen("Mapped Drives", String.Format("Problem with Mapped Drives Password.{0}Contact Netowrk Services", vbCrLf))
+                messageBox.ShowDialog()
+            End Try
+
         End If
         Return "NOPWD"
     End Function

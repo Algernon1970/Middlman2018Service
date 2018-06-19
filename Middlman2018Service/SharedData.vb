@@ -48,7 +48,13 @@ Module SharedData
 
         Catch ex As Exception
             online = False
-            Return "Failed check"
+            If IsNetworkAvailable() Then
+                online = False
+                Return "Not Ashby Domain"
+            Else
+                online = False
+                Return "No Network"
+            End If
         End Try
     End Function
 

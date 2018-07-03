@@ -101,6 +101,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        '''</summary>
+        Friend ReadOnly Property submarine_diving_alarm_daniel_simon() As System.IO.UnmanagedMemoryStream
+            Get
+                Return ResourceManager.GetStream("submarine_diving_alarm_daniel_simon", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         '''</summary>
         Friend ReadOnly Property whitecloud() As System.Drawing.Icon

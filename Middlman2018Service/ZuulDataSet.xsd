@@ -250,7 +250,7 @@ WHERE        (ComputerID = @cid) AND (PrinterID = @pid)</CommandText>
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="ZuulConnectionString1 (MySettings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="RemoveDefaultForComputer" Modifier="Public" Name="RemoveDefaultForComputer" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy3" UserSourceName="RemoveDefaultForComputer">
+              <DbSource ConnectionRef="ZuulConnectionString1 (MySettings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="RemoveDefaultForComputer" Modifier="Public" Name="RemoveDefaultForComputer" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="RemoveDefaultForComputer">
                 <UpdateCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
                     <CommandText>UPDATE       Lnk_ComputerPrinter
@@ -263,7 +263,7 @@ WHERE        (ComputerID = @cid);
                   </DbCommand>
                 </UpdateCommand>
               </DbSource>
-              <DbSource ConnectionRef="ZuulConnectionString1 (MySettings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="UpdateDefault" Modifier="Public" Name="UpdateDefault" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="UpdateDefault">
+              <DbSource ConnectionRef="ZuulConnectionString1 (MySettings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="UpdateDefault" Modifier="Public" Name="UpdateDefault" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy3" UserSourceName="UpdateDefault">
                 <UpdateCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
                     <CommandText>UPDATE       Lnk_ComputerPrinter
@@ -337,7 +337,7 @@ SELECT ID, PrinterID, InfoID FROM Lnk_PrinterInfo WHERE (ID = @ID)</CommandText>
               <DbSource ConnectionRef="ZuulConnectionString1 (MySettings)" DbObjectName="Zuul.dbo.Tbl_Computer" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
                 <DeleteCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>DELETE FROM [Tbl_Computer] WHERE (([ComputerID] = @Original_ComputerID) AND ([Name] = @Original_Name) AND ((@IsNull_InventoryNumber = 1 AND [InventoryNumber] IS NULL) OR ([InventoryNumber] = @Original_InventoryNumber)) AND ((@IsNull_SerialNumber = 1 AND [SerialNumber] IS NULL) OR ([SerialNumber] = @Original_SerialNumber)) AND ((@IsNull_Make = 1 AND [Make] IS NULL) OR ([Make] = @Original_Make)) AND ((@IsNull_Model = 1 AND [Model] IS NULL) OR ([Model] = @Original_Model)) AND ((@IsNull_RamGB = 1 AND [RamGB] IS NULL) OR ([RamGB] = @Original_RamGB)) AND ((@IsNull_HDDGB = 1 AND [HDDGB] IS NULL) OR ([HDDGB] = @Original_HDDGB)) AND ((@IsNull_SSD = 1 AND [SSD] IS NULL) OR ([SSD] = @Original_SSD)) AND ([Location] = @Original_Location) AND ((@IsNull_Supplier = 1 AND [Supplier] IS NULL) OR ([Supplier] = @Original_Supplier)) AND ((@IsNull_WiredMac = 1 AND [WiredMac] IS NULL) OR ([WiredMac] = @Original_WiredMac)) AND ((@IsNull_WirelessMac = 1 AND [WirelessMac] IS NULL) OR ([WirelessMac] = @Original_WirelessMac)) AND ([Disposed] = @Original_Disposed) AND ((@IsNull_PurchaseCost = 1 AND [PurchaseCost] IS NULL) OR ([PurchaseCost] = @Original_PurchaseCost)) AND ((@IsNull_PurchaseDate = 1 AND [PurchaseDate] IS NULL) OR ([PurchaseDate] = @Original_PurchaseDate)) AND ((@IsNull_ADPath = 1 AND [ADPath] IS NULL) OR ([ADPath] = @Original_ADPath)))</CommandText>
+                    <CommandText>DELETE FROM [Tbl_Computer] WHERE (([ComputerID] = @Original_ComputerID) AND ([Name] = @Original_Name) AND ((@IsNull_InventoryNumber = 1 AND [InventoryNumber] IS NULL) OR ([InventoryNumber] = @Original_InventoryNumber)) AND ((@IsNull_SerialNumber = 1 AND [SerialNumber] IS NULL) OR ([SerialNumber] = @Original_SerialNumber)) AND ((@IsNull_Make = 1 AND [Make] IS NULL) OR ([Make] = @Original_Make)) AND ((@IsNull_Model = 1 AND [Model] IS NULL) OR ([Model] = @Original_Model)) AND ((@IsNull_RamGB = 1 AND [RamGB] IS NULL) OR ([RamGB] = @Original_RamGB)) AND ((@IsNull_HDDGB = 1 AND [HDDGB] IS NULL) OR ([HDDGB] = @Original_HDDGB)) AND ((@IsNull_SSD = 1 AND [SSD] IS NULL) OR ([SSD] = @Original_SSD)) AND ([Location] = @Original_Location) AND ((@IsNull_Supplier = 1 AND [Supplier] IS NULL) OR ([Supplier] = @Original_Supplier)) AND ((@IsNull_WiredMac = 1 AND [WiredMac] IS NULL) OR ([WiredMac] = @Original_WiredMac)) AND ((@IsNull_WirelessMac = 1 AND [WirelessMac] IS NULL) OR ([WirelessMac] = @Original_WirelessMac)) AND ([Disposed] = @Original_Disposed) AND ((@IsNull_PurchaseCost = 1 AND [PurchaseCost] IS NULL) OR ([PurchaseCost] = @Original_PurchaseCost)) AND ((@IsNull_PurchaseDate = 1 AND [PurchaseDate] IS NULL) OR ([PurchaseDate] = @Original_PurchaseDate)) AND ((@IsNull_ADPath = 1 AND [ADPath] IS NULL) OR ([ADPath] = @Original_ADPath)) AND ((@IsNull_HDDFree = 1 AND [HDDFree] IS NULL) OR ([HDDFree] = @Original_HDDFree)) AND ((@IsNull_LastScrape = 1 AND [LastScrape] IS NULL) OR ([LastScrape] = @Original_LastScrape)) AND ((@IsNull_Processor = 1 AND [Processor] IS NULL) OR ([Processor] = @Original_Processor)) AND ((@IsNull_Slots = 1 AND [Slots] IS NULL) OR ([Slots] = @Original_Slots)))</CommandText>
                     <Parameters>
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_ComputerID" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="ComputerID" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_Name" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Name" SourceColumnNullMapping="false" SourceVersion="Original" />
@@ -369,13 +369,21 @@ SELECT ID, PrinterID, InfoID FROM Lnk_PrinterInfo WHERE (ID = @ID)</CommandText>
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@Original_PurchaseDate" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="PurchaseDate" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_ADPath" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="ADPath" SourceColumnNullMapping="true" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_ADPath" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="ADPath" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_HDDFree" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="HDDFree" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_HDDFree" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="HDDFree" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_LastScrape" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="LastScrape" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@Original_LastScrape" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="LastScrape" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Processor" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Processor" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_Processor" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Processor" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Slots" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Slots" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_Slots" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Slots" SourceColumnNullMapping="false" SourceVersion="Original" />
                     </Parameters>
                   </DbCommand>
                 </DeleteCommand>
                 <InsertCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>INSERT INTO [Tbl_Computer] ([Name], [InventoryNumber], [SerialNumber], [Make], [Model], [RamGB], [HDDGB], [SSD], [Location], [Supplier], [WiredMac], [WirelessMac], [Disposed], [PurchaseCost], [PurchaseDate], [ADPath]) VALUES (@Name, @InventoryNumber, @SerialNumber, @Make, @Model, @RamGB, @HDDGB, @SSD, @Location, @Supplier, @WiredMac, @WirelessMac, @Disposed, @PurchaseCost, @PurchaseDate, @ADPath);
-SELECT ComputerID, Name, InventoryNumber, SerialNumber, Make, Model, RamGB, HDDGB, SSD, Location, Supplier, WiredMac, WirelessMac, Disposed, PurchaseCost, PurchaseDate, ADPath FROM Tbl_Computer WHERE (ComputerID = SCOPE_IDENTITY())</CommandText>
+                    <CommandText>INSERT INTO [Tbl_Computer] ([Name], [InventoryNumber], [SerialNumber], [Make], [Model], [RamGB], [HDDGB], [SSD], [Location], [Supplier], [WiredMac], [WirelessMac], [Disposed], [PurchaseCost], [PurchaseDate], [ADPath], [HDDFree], [LastScrape], [Processor], [Slots]) VALUES (@Name, @InventoryNumber, @SerialNumber, @Make, @Model, @RamGB, @HDDGB, @SSD, @Location, @Supplier, @WiredMac, @WirelessMac, @Disposed, @PurchaseCost, @PurchaseDate, @ADPath, @HDDFree, @LastScrape, @Processor, @Slots);
+SELECT ComputerID, Name, InventoryNumber, SerialNumber, Make, Model, RamGB, HDDGB, SSD, Location, Supplier, WiredMac, WirelessMac, Disposed, PurchaseCost, PurchaseDate, ADPath, HDDFree, LastScrape, Processor, Slots FROM Tbl_Computer WHERE (ComputerID = SCOPE_IDENTITY())</CommandText>
                     <Parameters>
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Name" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Name" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@InventoryNumber" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="InventoryNumber" SourceColumnNullMapping="false" SourceVersion="Current" />
@@ -393,20 +401,23 @@ SELECT ComputerID, Name, InventoryNumber, SerialNumber, Make, Model, RamGB, HDDG
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Currency" Direction="Input" ParameterName="@PurchaseCost" Precision="0" ProviderType="Money" Scale="0" Size="0" SourceColumn="PurchaseCost" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@PurchaseDate" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="PurchaseDate" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@ADPath" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="ADPath" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@HDDFree" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="HDDFree" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@LastScrape" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="LastScrape" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Processor" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Processor" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Slots" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Slots" SourceColumnNullMapping="false" SourceVersion="Current" />
                     </Parameters>
                   </DbCommand>
                 </InsertCommand>
                 <SelectCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="true">
-                    <CommandText>SELECT        ComputerID, Name, InventoryNumber, SerialNumber, Make, Model, RamGB, HDDGB, SSD, Location, Supplier, WiredMac, WirelessMac, Disposed, PurchaseCost, PurchaseDate, ADPath
-FROM            Tbl_Computer</CommandText>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT ComputerID, Name, InventoryNumber, SerialNumber, Make, Model, RamGB, HDDGB, SSD, Location, Supplier, WiredMac, WirelessMac, Disposed, PurchaseCost, PurchaseDate, ADPath, HDDFree, LastScrape, Processor, Slots FROM Tbl_Computer</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
                 <UpdateCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>UPDATE [Tbl_Computer] SET [Name] = @Name, [InventoryNumber] = @InventoryNumber, [SerialNumber] = @SerialNumber, [Make] = @Make, [Model] = @Model, [RamGB] = @RamGB, [HDDGB] = @HDDGB, [SSD] = @SSD, [Location] = @Location, [Supplier] = @Supplier, [WiredMac] = @WiredMac, [WirelessMac] = @WirelessMac, [Disposed] = @Disposed, [PurchaseCost] = @PurchaseCost, [PurchaseDate] = @PurchaseDate, [ADPath] = @ADPath WHERE (([ComputerID] = @Original_ComputerID) AND ([Name] = @Original_Name) AND ((@IsNull_InventoryNumber = 1 AND [InventoryNumber] IS NULL) OR ([InventoryNumber] = @Original_InventoryNumber)) AND ((@IsNull_SerialNumber = 1 AND [SerialNumber] IS NULL) OR ([SerialNumber] = @Original_SerialNumber)) AND ((@IsNull_Make = 1 AND [Make] IS NULL) OR ([Make] = @Original_Make)) AND ((@IsNull_Model = 1 AND [Model] IS NULL) OR ([Model] = @Original_Model)) AND ((@IsNull_RamGB = 1 AND [RamGB] IS NULL) OR ([RamGB] = @Original_RamGB)) AND ((@IsNull_HDDGB = 1 AND [HDDGB] IS NULL) OR ([HDDGB] = @Original_HDDGB)) AND ((@IsNull_SSD = 1 AND [SSD] IS NULL) OR ([SSD] = @Original_SSD)) AND ([Location] = @Original_Location) AND ((@IsNull_Supplier = 1 AND [Supplier] IS NULL) OR ([Supplier] = @Original_Supplier)) AND ((@IsNull_WiredMac = 1 AND [WiredMac] IS NULL) OR ([WiredMac] = @Original_WiredMac)) AND ((@IsNull_WirelessMac = 1 AND [WirelessMac] IS NULL) OR ([WirelessMac] = @Original_WirelessMac)) AND ([Disposed] = @Original_Disposed) AND ((@IsNull_PurchaseCost = 1 AND [PurchaseCost] IS NULL) OR ([PurchaseCost] = @Original_PurchaseCost)) AND ((@IsNull_PurchaseDate = 1 AND [PurchaseDate] IS NULL) OR ([PurchaseDate] = @Original_PurchaseDate)) AND ((@IsNull_ADPath = 1 AND [ADPath] IS NULL) OR ([ADPath] = @Original_ADPath)));
-SELECT ComputerID, Name, InventoryNumber, SerialNumber, Make, Model, RamGB, HDDGB, SSD, Location, Supplier, WiredMac, WirelessMac, Disposed, PurchaseCost, PurchaseDate, ADPath FROM Tbl_Computer WHERE (ComputerID = @ComputerID)</CommandText>
+                    <CommandText>UPDATE [Tbl_Computer] SET [Name] = @Name, [InventoryNumber] = @InventoryNumber, [SerialNumber] = @SerialNumber, [Make] = @Make, [Model] = @Model, [RamGB] = @RamGB, [HDDGB] = @HDDGB, [SSD] = @SSD, [Location] = @Location, [Supplier] = @Supplier, [WiredMac] = @WiredMac, [WirelessMac] = @WirelessMac, [Disposed] = @Disposed, [PurchaseCost] = @PurchaseCost, [PurchaseDate] = @PurchaseDate, [ADPath] = @ADPath, [HDDFree] = @HDDFree, [LastScrape] = @LastScrape, [Processor] = @Processor, [Slots] = @Slots WHERE (([ComputerID] = @Original_ComputerID) AND ([Name] = @Original_Name) AND ((@IsNull_InventoryNumber = 1 AND [InventoryNumber] IS NULL) OR ([InventoryNumber] = @Original_InventoryNumber)) AND ((@IsNull_SerialNumber = 1 AND [SerialNumber] IS NULL) OR ([SerialNumber] = @Original_SerialNumber)) AND ((@IsNull_Make = 1 AND [Make] IS NULL) OR ([Make] = @Original_Make)) AND ((@IsNull_Model = 1 AND [Model] IS NULL) OR ([Model] = @Original_Model)) AND ((@IsNull_RamGB = 1 AND [RamGB] IS NULL) OR ([RamGB] = @Original_RamGB)) AND ((@IsNull_HDDGB = 1 AND [HDDGB] IS NULL) OR ([HDDGB] = @Original_HDDGB)) AND ((@IsNull_SSD = 1 AND [SSD] IS NULL) OR ([SSD] = @Original_SSD)) AND ([Location] = @Original_Location) AND ((@IsNull_Supplier = 1 AND [Supplier] IS NULL) OR ([Supplier] = @Original_Supplier)) AND ((@IsNull_WiredMac = 1 AND [WiredMac] IS NULL) OR ([WiredMac] = @Original_WiredMac)) AND ((@IsNull_WirelessMac = 1 AND [WirelessMac] IS NULL) OR ([WirelessMac] = @Original_WirelessMac)) AND ([Disposed] = @Original_Disposed) AND ((@IsNull_PurchaseCost = 1 AND [PurchaseCost] IS NULL) OR ([PurchaseCost] = @Original_PurchaseCost)) AND ((@IsNull_PurchaseDate = 1 AND [PurchaseDate] IS NULL) OR ([PurchaseDate] = @Original_PurchaseDate)) AND ((@IsNull_ADPath = 1 AND [ADPath] IS NULL) OR ([ADPath] = @Original_ADPath)) AND ((@IsNull_HDDFree = 1 AND [HDDFree] IS NULL) OR ([HDDFree] = @Original_HDDFree)) AND ((@IsNull_LastScrape = 1 AND [LastScrape] IS NULL) OR ([LastScrape] = @Original_LastScrape)) AND ((@IsNull_Processor = 1 AND [Processor] IS NULL) OR ([Processor] = @Original_Processor)) AND ((@IsNull_Slots = 1 AND [Slots] IS NULL) OR ([Slots] = @Original_Slots)));
+SELECT ComputerID, Name, InventoryNumber, SerialNumber, Make, Model, RamGB, HDDGB, SSD, Location, Supplier, WiredMac, WirelessMac, Disposed, PurchaseCost, PurchaseDate, ADPath, HDDFree, LastScrape, Processor, Slots FROM Tbl_Computer WHERE (ComputerID = @ComputerID)</CommandText>
                     <Parameters>
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Name" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Name" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@InventoryNumber" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="InventoryNumber" SourceColumnNullMapping="false" SourceVersion="Current" />
@@ -424,6 +435,10 @@ SELECT ComputerID, Name, InventoryNumber, SerialNumber, Make, Model, RamGB, HDDG
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Currency" Direction="Input" ParameterName="@PurchaseCost" Precision="0" ProviderType="Money" Scale="0" Size="0" SourceColumn="PurchaseCost" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@PurchaseDate" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="PurchaseDate" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@ADPath" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="ADPath" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@HDDFree" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="HDDFree" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@LastScrape" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="LastScrape" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Processor" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Processor" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Slots" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Slots" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_ComputerID" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="ComputerID" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_Name" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Name" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_InventoryNumber" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="InventoryNumber" SourceColumnNullMapping="true" SourceVersion="Original" />
@@ -454,6 +469,14 @@ SELECT ComputerID, Name, InventoryNumber, SerialNumber, Make, Model, RamGB, HDDG
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@Original_PurchaseDate" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="PurchaseDate" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_ADPath" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="ADPath" SourceColumnNullMapping="true" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_ADPath" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="ADPath" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_HDDFree" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="HDDFree" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_HDDFree" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="HDDFree" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_LastScrape" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="LastScrape" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@Original_LastScrape" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="LastScrape" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Processor" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Processor" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_Processor" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Processor" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Slots" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Slots" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_Slots" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Slots" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="false" AutogeneratedName="ComputerID" ColumnName="ComputerID" DataSourceName="Zuul.dbo.Tbl_Computer" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@ComputerID" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="ComputerID" SourceColumnNullMapping="false" SourceVersion="Current" />
                     </Parameters>
                   </DbCommand>
@@ -478,6 +501,10 @@ SELECT ComputerID, Name, InventoryNumber, SerialNumber, Make, Model, RamGB, HDDG
               <Mapping SourceColumn="PurchaseCost" DataSetColumn="PurchaseCost" />
               <Mapping SourceColumn="Disposed" DataSetColumn="Disposed" />
               <Mapping SourceColumn="ADPath" DataSetColumn="ADPath" />
+              <Mapping SourceColumn="Processor" DataSetColumn="Processor" />
+              <Mapping SourceColumn="LastScrape" DataSetColumn="LastScrape" />
+              <Mapping SourceColumn="HDDFree" DataSetColumn="HDDFree" />
+              <Mapping SourceColumn="Slots" DataSetColumn="Slots" />
             </Mappings>
             <Sources>
               <DbSource ConnectionRef="ZuulConnectionString1 (MySettings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="CreateComputer" Modifier="Public" Name="CreateComputer" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="CreateComputer">
@@ -510,7 +537,7 @@ SELECT ComputerID, name FROM Tbl_Computer WHERE (ComputerID = SCOPE_IDENTITY())<
               <DbSource ConnectionRef="ZuulConnectionString1 (MySettings)" DbObjectName="Zuul.dbo.Tbl_Computer" DbObjectType="Table" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetComputerByName" GetMethodModifier="Public" GetMethodName="GetComputerByName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetComputerByName" UserSourceName="GetComputerByName">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
-                    <CommandText>SELECT ADPath, ComputerID, Disposed, HDDGB, InventoryNumber, Location, Make, Model, Name, PurchaseCost, PurchaseDate, RamGB, SSD, SerialNumber, Supplier, WiredMac, WirelessMac FROM Tbl_Computer WHERE (Name = @ComputerName)</CommandText>
+                    <CommandText>SELECT ADPath, ComputerID, Disposed, HDDGB, InventoryNumber, Location, Make, Model, Name, PurchaseCost, PurchaseDate, RamGB, SSD, SerialNumber, Supplier, WiredMac, WirelessMac, HDDFree, LastScrape, Processor, Slots FROM Tbl_Computer WHERE (Name = @ComputerName)</CommandText>
                     <Parameters>
                       <Parameter AllowDbNull="false" AutogeneratedName="ComputerName" ColumnName="Name" DataSourceName="Zuul.dbo.Tbl_Computer" DataTypeServer="nvarchar(50)" DbType="String" Direction="Input" ParameterName="@ComputerName" Precision="0" ProviderType="NVarChar" Scale="0" Size="50" SourceColumn="Name" SourceColumnNullMapping="false" SourceVersion="Current" />
                     </Parameters>
@@ -572,7 +599,18 @@ SELECT InfoID, DateStamp, Title, Notes FROM Tbl_Info WHERE (InfoID = @InfoID)</C
               <Mapping SourceColumn="Title" DataSetColumn="Title" />
               <Mapping SourceColumn="Notes" DataSetColumn="Notes" />
             </Mappings>
-            <Sources />
+            <Sources>
+              <DbSource ConnectionRef="ZuulConnectionString1 (MySettings)" DbObjectName="Zuul.dbo.Tbl_Info" DbObjectType="Table" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetCurrentVersion" GetMethodModifier="Public" GetMethodName="GetCurrentVersion" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetCurrentVersion" UserSourceName="GetCurrentVersion">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        InfoID, DateStamp, Title, Notes
+FROM            Tbl_Info
+WHERE        (Title = N'Version')</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="Tbl_LocationTableAdapter" GeneratorDataComponentClassName="Tbl_LocationTableAdapter" Name="Tbl_Location" UserDataComponentName="Tbl_LocationTableAdapter">
             <MainSource>
@@ -1049,7 +1087,7 @@ SELECT ID, ProjectorID, InfoID FROM Lnk_ProjectorInfo WHERE (ID = @ID)</CommandT
               <DbSource ConnectionRef="ZuulConnectionString1 (MySettings)" DbObjectName="Zuul.dbo.Tbl_Projector" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
                 <DeleteCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>DELETE FROM [dbo].[Tbl_Projector] WHERE (([ProjectID] = @Original_ProjectID) AND ((@IsNull_InventoryNumber = 1 AND [InventoryNumber] IS NULL) OR ([InventoryNumber] = @Original_InventoryNumber)) AND ((@IsNull_SerialNumber = 1 AND [SerialNumber] IS NULL) OR ([SerialNumber] = @Original_SerialNumber)) AND ((@IsNull_Make = 1 AND [Make] IS NULL) OR ([Make] = @Original_Make)) AND ((@IsNull_Model = 1 AND [Model] IS NULL) OR ([Model] = @Original_Model)) AND ([Location] = @Original_Location) AND ((@IsNull_Supplier = 1 AND [Supplier] IS NULL) OR ([Supplier] = @Original_Supplier)) AND ((@IsNull_PurchaseDate = 1 AND [PurchaseDate] IS NULL) OR ([PurchaseDate] = @Original_PurchaseDate)) AND ((@IsNull_PurchaseCost = 1 AND [PurchaseCost] IS NULL) OR ([PurchaseCost] = @Original_PurchaseCost)) AND ([Disposed] = @Original_Disposed) AND ((@IsNull_LastCleaned = 1 AND [LastCleaned] IS NULL) OR ([LastCleaned] = @Original_LastCleaned)))</CommandText>
+                    <CommandText>DELETE FROM [Tbl_Projector] WHERE (([ProjectID] = @Original_ProjectID) AND ((@IsNull_InventoryNumber = 1 AND [InventoryNumber] IS NULL) OR ([InventoryNumber] = @Original_InventoryNumber)) AND ((@IsNull_SerialNumber = 1 AND [SerialNumber] IS NULL) OR ([SerialNumber] = @Original_SerialNumber)) AND ((@IsNull_Make = 1 AND [Make] IS NULL) OR ([Make] = @Original_Make)) AND ((@IsNull_Model = 1 AND [Model] IS NULL) OR ([Model] = @Original_Model)) AND ([Location] = @Original_Location) AND ([Supplier] = @Original_Supplier) AND ((@IsNull_PurchaseDate = 1 AND [PurchaseDate] IS NULL) OR ([PurchaseDate] = @Original_PurchaseDate)) AND ((@IsNull_PurchaseCost = 1 AND [PurchaseCost] IS NULL) OR ([PurchaseCost] = @Original_PurchaseCost)) AND ([Disposed] = @Original_Disposed) AND ((@IsNull_LastCleaned = 1 AND [LastCleaned] IS NULL) OR ([LastCleaned] = @Original_LastCleaned)) AND ([Name] = @Original_Name))</CommandText>
                     <Parameters>
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_ProjectID" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="ProjectID" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_InventoryNumber" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="InventoryNumber" SourceColumnNullMapping="true" SourceVersion="Original" />
@@ -1061,8 +1099,7 @@ SELECT ID, ProjectorID, InfoID FROM Lnk_ProjectorInfo WHERE (ID = @ID)</CommandT
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Model" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Model" SourceColumnNullMapping="true" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_Model" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Model" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Location" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Location" SourceColumnNullMapping="false" SourceVersion="Original" />
-                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Supplier" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Supplier" SourceColumnNullMapping="true" SourceVersion="Original" />
-                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Supplier" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Supplier" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Supplier" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Supplier" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_PurchaseDate" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="PurchaseDate" SourceColumnNullMapping="true" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@Original_PurchaseDate" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="PurchaseDate" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_PurchaseCost" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="PurchaseCost" SourceColumnNullMapping="true" SourceVersion="Original" />
@@ -1070,48 +1107,51 @@ SELECT ID, ProjectorID, InfoID FROM Lnk_ProjectorInfo WHERE (ID = @ID)</CommandT
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Original_Disposed" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Disposed" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_LastCleaned" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="LastCleaned" SourceColumnNullMapping="true" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@Original_LastCleaned" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="LastCleaned" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_Name" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Name" SourceColumnNullMapping="false" SourceVersion="Original" />
                     </Parameters>
                   </DbCommand>
                 </DeleteCommand>
                 <InsertCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>INSERT INTO [dbo].[Tbl_Projector] ([InventoryNumber], [SerialNumber], [Make], [Model], [Location], [Supplier], [PurchaseDate], [PurchaseCost], [Disposed], [LastCleaned]) VALUES (@InventoryNumber, @SerialNumber, @Make, @Model, @Location, @Supplier, @PurchaseDate, @PurchaseCost, @Disposed, @LastCleaned);
-SELECT ProjectID, InventoryNumber, SerialNumber, Make, Model, Location, Supplier, PurchaseDate, PurchaseCost, Disposed, LastCleaned FROM Tbl_Projector WHERE (ProjectID = SCOPE_IDENTITY())</CommandText>
+                    <CommandText>INSERT INTO [Tbl_Projector] ([InventoryNumber], [SerialNumber], [Make], [Model], [Location], [Supplier], [PurchaseDate], [PurchaseCost], [Disposed], [LastCleaned], [Name]) VALUES (@InventoryNumber, @SerialNumber, @Make, @Model, @Location, @Supplier, @PurchaseDate, @PurchaseCost, @Disposed, @LastCleaned, @Name);
+SELECT ProjectID, InventoryNumber, SerialNumber, Make, Model, Location, Supplier, PurchaseDate, PurchaseCost, Disposed, LastCleaned, Name FROM Tbl_Projector WHERE (ProjectID = SCOPE_IDENTITY())</CommandText>
                     <Parameters>
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@InventoryNumber" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="InventoryNumber" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@SerialNumber" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="SerialNumber" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Make" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Make" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Model" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Model" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Location" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Location" SourceColumnNullMapping="false" SourceVersion="Current" />
-                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Supplier" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Supplier" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Supplier" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Supplier" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@PurchaseDate" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="PurchaseDate" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Currency" Direction="Input" ParameterName="@PurchaseCost" Precision="0" ProviderType="Money" Scale="0" Size="0" SourceColumn="PurchaseCost" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Disposed" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Disposed" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@LastCleaned" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="LastCleaned" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Name" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Name" SourceColumnNullMapping="false" SourceVersion="Current" />
                     </Parameters>
                   </DbCommand>
                 </InsertCommand>
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT ProjectID, InventoryNumber, SerialNumber, Make, Model, Location, Supplier, PurchaseDate, PurchaseCost, Disposed, LastCleaned FROM dbo.Tbl_Projector</CommandText>
+                    <CommandText>SELECT ProjectID, InventoryNumber, SerialNumber, Make, Model, Location, Supplier, PurchaseDate, PurchaseCost, Disposed, LastCleaned, Name FROM Tbl_Projector</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
                 <UpdateCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>UPDATE [dbo].[Tbl_Projector] SET [InventoryNumber] = @InventoryNumber, [SerialNumber] = @SerialNumber, [Make] = @Make, [Model] = @Model, [Location] = @Location, [Supplier] = @Supplier, [PurchaseDate] = @PurchaseDate, [PurchaseCost] = @PurchaseCost, [Disposed] = @Disposed, [LastCleaned] = @LastCleaned WHERE (([ProjectID] = @Original_ProjectID) AND ((@IsNull_InventoryNumber = 1 AND [InventoryNumber] IS NULL) OR ([InventoryNumber] = @Original_InventoryNumber)) AND ((@IsNull_SerialNumber = 1 AND [SerialNumber] IS NULL) OR ([SerialNumber] = @Original_SerialNumber)) AND ((@IsNull_Make = 1 AND [Make] IS NULL) OR ([Make] = @Original_Make)) AND ((@IsNull_Model = 1 AND [Model] IS NULL) OR ([Model] = @Original_Model)) AND ([Location] = @Original_Location) AND ((@IsNull_Supplier = 1 AND [Supplier] IS NULL) OR ([Supplier] = @Original_Supplier)) AND ((@IsNull_PurchaseDate = 1 AND [PurchaseDate] IS NULL) OR ([PurchaseDate] = @Original_PurchaseDate)) AND ((@IsNull_PurchaseCost = 1 AND [PurchaseCost] IS NULL) OR ([PurchaseCost] = @Original_PurchaseCost)) AND ([Disposed] = @Original_Disposed) AND ((@IsNull_LastCleaned = 1 AND [LastCleaned] IS NULL) OR ([LastCleaned] = @Original_LastCleaned)));
-SELECT ProjectID, InventoryNumber, SerialNumber, Make, Model, Location, Supplier, PurchaseDate, PurchaseCost, Disposed, LastCleaned FROM Tbl_Projector WHERE (ProjectID = @ProjectID)</CommandText>
+                    <CommandText>UPDATE [Tbl_Projector] SET [InventoryNumber] = @InventoryNumber, [SerialNumber] = @SerialNumber, [Make] = @Make, [Model] = @Model, [Location] = @Location, [Supplier] = @Supplier, [PurchaseDate] = @PurchaseDate, [PurchaseCost] = @PurchaseCost, [Disposed] = @Disposed, [LastCleaned] = @LastCleaned, [Name] = @Name WHERE (([ProjectID] = @Original_ProjectID) AND ((@IsNull_InventoryNumber = 1 AND [InventoryNumber] IS NULL) OR ([InventoryNumber] = @Original_InventoryNumber)) AND ((@IsNull_SerialNumber = 1 AND [SerialNumber] IS NULL) OR ([SerialNumber] = @Original_SerialNumber)) AND ((@IsNull_Make = 1 AND [Make] IS NULL) OR ([Make] = @Original_Make)) AND ((@IsNull_Model = 1 AND [Model] IS NULL) OR ([Model] = @Original_Model)) AND ([Location] = @Original_Location) AND ([Supplier] = @Original_Supplier) AND ((@IsNull_PurchaseDate = 1 AND [PurchaseDate] IS NULL) OR ([PurchaseDate] = @Original_PurchaseDate)) AND ((@IsNull_PurchaseCost = 1 AND [PurchaseCost] IS NULL) OR ([PurchaseCost] = @Original_PurchaseCost)) AND ([Disposed] = @Original_Disposed) AND ((@IsNull_LastCleaned = 1 AND [LastCleaned] IS NULL) OR ([LastCleaned] = @Original_LastCleaned)) AND ([Name] = @Original_Name));
+SELECT ProjectID, InventoryNumber, SerialNumber, Make, Model, Location, Supplier, PurchaseDate, PurchaseCost, Disposed, LastCleaned, Name FROM Tbl_Projector WHERE (ProjectID = @ProjectID)</CommandText>
                     <Parameters>
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@InventoryNumber" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="InventoryNumber" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@SerialNumber" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="SerialNumber" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Make" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Make" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Model" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Model" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Location" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Location" SourceColumnNullMapping="false" SourceVersion="Current" />
-                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Supplier" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Supplier" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Supplier" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Supplier" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@PurchaseDate" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="PurchaseDate" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Currency" Direction="Input" ParameterName="@PurchaseCost" Precision="0" ProviderType="Money" Scale="0" Size="0" SourceColumn="PurchaseCost" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Disposed" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Disposed" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@LastCleaned" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="LastCleaned" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Name" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Name" SourceColumnNullMapping="false" SourceVersion="Current" />
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_ProjectID" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="ProjectID" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_InventoryNumber" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="InventoryNumber" SourceColumnNullMapping="true" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_InventoryNumber" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="InventoryNumber" SourceColumnNullMapping="false" SourceVersion="Original" />
@@ -1122,8 +1162,7 @@ SELECT ProjectID, InventoryNumber, SerialNumber, Make, Model, Location, Supplier
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Model" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Model" SourceColumnNullMapping="true" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_Model" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Model" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Location" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Location" SourceColumnNullMapping="false" SourceVersion="Original" />
-                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Supplier" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Supplier" SourceColumnNullMapping="true" SourceVersion="Original" />
-                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Supplier" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Supplier" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Supplier" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Supplier" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_PurchaseDate" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="PurchaseDate" SourceColumnNullMapping="true" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@Original_PurchaseDate" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="PurchaseDate" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_PurchaseCost" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="PurchaseCost" SourceColumnNullMapping="true" SourceVersion="Original" />
@@ -1131,6 +1170,7 @@ SELECT ProjectID, InventoryNumber, SerialNumber, Make, Model, Location, Supplier
                       <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Original_Disposed" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Disposed" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_LastCleaned" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="LastCleaned" SourceColumnNullMapping="true" SourceVersion="Original" />
                       <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Date" Direction="Input" ParameterName="@Original_LastCleaned" Precision="0" ProviderType="Date" Scale="0" Size="0" SourceColumn="LastCleaned" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_Name" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Name" SourceColumnNullMapping="false" SourceVersion="Original" />
                       <Parameter AllowDbNull="false" AutogeneratedName="ProjectID" ColumnName="ProjectID" DataSourceName="Zuul.dbo.Tbl_Projector" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@ProjectID" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="ProjectID" SourceColumnNullMapping="false" SourceVersion="Current" />
                     </Parameters>
                   </DbCommand>
@@ -1149,6 +1189,7 @@ SELECT ProjectID, InventoryNumber, SerialNumber, Make, Model, Location, Supplier
               <Mapping SourceColumn="PurchaseCost" DataSetColumn="PurchaseCost" />
               <Mapping SourceColumn="Disposed" DataSetColumn="Disposed" />
               <Mapping SourceColumn="LastCleaned" DataSetColumn="LastCleaned" />
+              <Mapping SourceColumn="Name" DataSetColumn="Name" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -1331,6 +1372,67 @@ SELECT ItemID, Name, InventoryNumber, SerialNumber, Make, Model, Description, Lo
             </Mappings>
             <Sources />
           </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="Tbl_AlarmsTableAdapter" GeneratorDataComponentClassName="Tbl_AlarmsTableAdapter" Name="Tbl_Alarms" UserDataComponentName="Tbl_AlarmsTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="ZuulConnectionString1 (MySettings)" DbObjectName="Zuul.dbo.Tbl_Alarms" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>DELETE FROM [dbo].[Tbl_Alarms] WHERE (([ID] = @Original_ID) AND ((@IsNull_AlarmName = 1 AND [AlarmName] IS NULL) OR ([AlarmName] = @Original_AlarmName)) AND ([AlarmTime] = @Original_AlarmTime) AND ((@IsNull_AlarmSound = 1 AND [AlarmSound] IS NULL) OR ([AlarmSound] = @Original_AlarmSound)))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_ID" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="ID" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_AlarmName" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="AlarmName" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_AlarmName" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmName" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_AlarmTime" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmTime" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_AlarmSound" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="AlarmSound" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_AlarmSound" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmSound" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+                <InsertCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>INSERT INTO [dbo].[Tbl_Alarms] ([AlarmName], [AlarmTime], [AlarmSound]) VALUES (@AlarmName, @AlarmTime, @AlarmSound);
+SELECT ID, AlarmName, AlarmTime, AlarmSound FROM Tbl_Alarms WHERE (ID = SCOPE_IDENTITY())</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@AlarmName" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmName" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@AlarmTime" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmTime" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@AlarmSound" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmSound" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </InsertCommand>
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT ID, AlarmName, AlarmTime, AlarmSound FROM dbo.Tbl_Alarms</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>UPDATE [dbo].[Tbl_Alarms] SET [AlarmName] = @AlarmName, [AlarmTime] = @AlarmTime, [AlarmSound] = @AlarmSound WHERE (([ID] = @Original_ID) AND ((@IsNull_AlarmName = 1 AND [AlarmName] IS NULL) OR ([AlarmName] = @Original_AlarmName)) AND ([AlarmTime] = @Original_AlarmTime) AND ((@IsNull_AlarmSound = 1 AND [AlarmSound] IS NULL) OR ([AlarmSound] = @Original_AlarmSound)));
+SELECT ID, AlarmName, AlarmTime, AlarmSound FROM Tbl_Alarms WHERE (ID = @ID)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@AlarmName" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmName" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@AlarmTime" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmTime" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@AlarmSound" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmSound" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_ID" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="ID" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_AlarmName" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="AlarmName" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_AlarmName" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmName" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_AlarmTime" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmTime" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_AlarmSound" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="AlarmSound" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Original_AlarmSound" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="AlarmSound" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="ID" ColumnName="ID" DataSourceName="Zuul.dbo.Tbl_Alarms" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@ID" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="ID" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </UpdateCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="ID" DataSetColumn="ID" />
+              <Mapping SourceColumn="AlarmName" DataSetColumn="AlarmName" />
+              <Mapping SourceColumn="AlarmTime" DataSetColumn="AlarmTime" />
+              <Mapping SourceColumn="AlarmSound" DataSetColumn="AlarmSound" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
         </Tables>
         <Sources />
       </DataSource>
@@ -1441,6 +1543,22 @@ SELECT ItemID, Name, InventoryNumber, SerialNumber, Make, Model, Description, Lo
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="150" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Processor" msprop:Generator_ColumnVarNameInTable="columnProcessor" msprop:Generator_ColumnPropNameInRow="Processor" msprop:Generator_ColumnPropNameInTable="ProcessorColumn" msprop:Generator_UserColumnName="Processor" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="70" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="LastScrape" msprop:Generator_ColumnVarNameInTable="columnLastScrape" msprop:Generator_ColumnPropNameInRow="LastScrape" msprop:Generator_ColumnPropNameInTable="LastScrapeColumn" msprop:Generator_UserColumnName="LastScrape" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="HDDFree" msprop:Generator_ColumnVarNameInTable="columnHDDFree" msprop:Generator_ColumnPropNameInRow="HDDFree" msprop:Generator_ColumnPropNameInTable="HDDFreeColumn" msprop:Generator_UserColumnName="HDDFree" type="xs:int" minOccurs="0" />
+              <xs:element name="Slots" msprop:Generator_ColumnVarNameInTable="columnSlots" msprop:Generator_ColumnPropNameInRow="Slots" msprop:Generator_ColumnPropNameInTable="SlotsColumn" msprop:Generator_UserColumnName="Slots" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
@@ -1670,6 +1788,13 @@ SELECT ItemID, Name, InventoryNumber, SerialNumber, Make, Model, Description, Lo
               <xs:element name="PurchaseCost" msprop:Generator_ColumnVarNameInTable="columnPurchaseCost" msprop:Generator_ColumnPropNameInRow="PurchaseCost" msprop:Generator_ColumnPropNameInTable="PurchaseCostColumn" msprop:Generator_UserColumnName="PurchaseCost" type="xs:decimal" minOccurs="0" />
               <xs:element name="Disposed" msprop:Generator_ColumnVarNameInTable="columnDisposed" msprop:Generator_ColumnPropNameInRow="Disposed" msprop:Generator_ColumnPropNameInTable="DisposedColumn" msprop:Generator_UserColumnName="Disposed" type="xs:boolean" />
               <xs:element name="LastCleaned" msprop:Generator_ColumnVarNameInTable="columnLastCleaned" msprop:Generator_ColumnPropNameInRow="LastCleaned" msprop:Generator_ColumnPropNameInTable="LastCleanedColumn" msprop:Generator_UserColumnName="LastCleaned" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -1749,6 +1874,34 @@ SELECT ItemID, Name, InventoryNumber, SerialNumber, Make, Model, Description, Lo
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="Tbl_Alarms" msprop:Generator_TableClassName="Tbl_AlarmsDataTable" msprop:Generator_TableVarName="tableTbl_Alarms" msprop:Generator_TablePropName="Tbl_Alarms" msprop:Generator_RowDeletingName="Tbl_AlarmsRowDeleting" msprop:Generator_RowChangingName="Tbl_AlarmsRowChanging" msprop:Generator_RowEvHandlerName="Tbl_AlarmsRowChangeEventHandler" msprop:Generator_RowDeletedName="Tbl_AlarmsRowDeleted" msprop:Generator_UserTableName="Tbl_Alarms" msprop:Generator_RowChangedName="Tbl_AlarmsRowChanged" msprop:Generator_RowEvArgName="Tbl_AlarmsRowChangeEvent" msprop:Generator_RowClassName="Tbl_AlarmsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
+              <xs:element name="AlarmName" msprop:Generator_ColumnVarNameInTable="columnAlarmName" msprop:Generator_ColumnPropNameInRow="AlarmName" msprop:Generator_ColumnPropNameInTable="AlarmNameColumn" msprop:Generator_UserColumnName="AlarmName" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="AlarmTime" msprop:Generator_ColumnVarNameInTable="columnAlarmTime" msprop:Generator_ColumnPropNameInRow="AlarmTime" msprop:Generator_ColumnPropNameInTable="AlarmTimeColumn" msprop:Generator_UserColumnName="AlarmTime">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="AlarmSound" msprop:Generator_ColumnVarNameInTable="columnAlarmSound" msprop:Generator_ColumnPropNameInRow="AlarmSound" msprop:Generator_ColumnPropNameInTable="AlarmSoundColumn" msprop:Generator_UserColumnName="AlarmSound" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
@@ -1807,6 +1960,10 @@ SELECT ItemID, Name, InventoryNumber, SerialNumber, Make, Model, Description, Lo
       <xs:selector xpath=".//mstns:Tbl_Equipment" />
       <xs:field xpath="mstns:ItemID" />
     </xs:unique>
+    <xs:unique name="Tbl_Alarms_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Tbl_Alarms" />
+      <xs:field xpath="mstns:ID" />
+    </xs:unique>
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
@@ -1826,6 +1983,8 @@ SELECT ItemID, Name, InventoryNumber, SerialNumber, Make, Model, Description, Lo
       <msdata:Relationship name="FK_Lnk_ProjectorInfo_Tbl_Projector" msdata:parent="Tbl_Projector" msdata:child="Lnk_ProjectorInfo" msdata:parentkey="ProjectID" msdata:childkey="ProjectorID" msprop:Generator_UserChildTable="Lnk_ProjectorInfo" msprop:Generator_ChildPropName="GetLnk_ProjectorInfoRows" msprop:Generator_UserRelationName="FK_Lnk_ProjectorInfo_Tbl_Projector" msprop:Generator_RelationVarName="relationFK_Lnk_ProjectorInfo_Tbl_Projector" msprop:Generator_UserParentTable="Tbl_Projector" msprop:Generator_ParentPropName="Tbl_ProjectorRow" />
       <msdata:Relationship name="FK_Tbl_Equipment_Tbl_Location" msdata:parent="Tbl_Location" msdata:child="Tbl_Equipment" msdata:parentkey="LocationID" msdata:childkey="Location" msprop:Generator_UserChildTable="Tbl_Equipment" msprop:Generator_ChildPropName="GetTbl_EquipmentRows" msprop:Generator_UserRelationName="FK_Tbl_Equipment_Tbl_Location" msprop:Generator_ParentPropName="Tbl_LocationRow" msprop:Generator_RelationVarName="relationFK_Tbl_Equipment_Tbl_Location" msprop:Generator_UserParentTable="Tbl_Location" />
       <msdata:Relationship name="FK_Tbl_Equipment_Tbl_Supplier" msdata:parent="Tbl_Supplier" msdata:child="Tbl_Equipment" msdata:parentkey="SupplierID" msdata:childkey="Supplier" msprop:Generator_UserChildTable="Tbl_Equipment" msprop:Generator_ChildPropName="GetTbl_EquipmentRows" msprop:Generator_UserRelationName="FK_Tbl_Equipment_Tbl_Supplier" msprop:Generator_ParentPropName="Tbl_SupplierRow" msprop:Generator_RelationVarName="relationFK_Tbl_Equipment_Tbl_Supplier" msprop:Generator_UserParentTable="Tbl_Supplier" />
+      <msdata:Relationship name="FK_Tbl_Projector_Tbl_Location" msdata:parent="Tbl_Location" msdata:child="Tbl_Projector" msdata:parentkey="LocationID" msdata:childkey="Location" msprop:Generator_UserChildTable="Tbl_Projector" msprop:Generator_ChildPropName="GetTbl_ProjectorRows" msprop:Generator_UserRelationName="FK_Tbl_Projector_Tbl_Location" msprop:Generator_ParentPropName="Tbl_LocationRow" msprop:Generator_RelationVarName="relationFK_Tbl_Projector_Tbl_Location" msprop:Generator_UserParentTable="Tbl_Location" />
+      <msdata:Relationship name="FK_Tbl_Projector_Tbl_Supplier" msdata:parent="Tbl_Supplier" msdata:child="Tbl_Projector" msdata:parentkey="SupplierID" msdata:childkey="Supplier" msprop:Generator_UserChildTable="Tbl_Projector" msprop:Generator_ChildPropName="GetTbl_ProjectorRows" msprop:Generator_UserRelationName="FK_Tbl_Projector_Tbl_Supplier" msprop:Generator_ParentPropName="Tbl_SupplierRow" msprop:Generator_RelationVarName="relationFK_Tbl_Projector_Tbl_Supplier" msprop:Generator_UserParentTable="Tbl_Supplier" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

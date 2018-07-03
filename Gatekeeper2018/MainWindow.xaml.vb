@@ -3,14 +3,32 @@ Imports System.Drawing.Printing
 Imports System.IO
 Imports GatekeeperTools
 Imports Hardcodet.Wpf.TaskbarNotification
+Imports System.Media.SoundPlayer
 
 Class MainWindow
+
+#Region "Callbacks"
+    Dim tn As New ToastBox
+
+    Private Sub Toast(ByVal title As String, ByVal msg As String)
+        Application.Current.Dispatcher.Invoke(Sub()
+                                                  tn.Show("Alarm", msg)
+                                              End Sub)
+    End Sub
+
+    Private Function IsAlarmAllowed() As Boolean?
+        Return Application.Current.Dispatcher.Invoke(Function()
+                                                         Return AlarmsCheck.IsChecked
+                                                     End Function)
+    End Function
+#End Region
 
 #Region "Threads"
     Private ReadOnly PrintMapper As New BackgroundWorker()
     Private ReadOnly PrivUserMapper As New BackgroundWorker()
     Private ReadOnly OneDriveMapper As New BackgroundWorker()
     Private ReadOnly DriveMonitor As New BackgroundWorker()
+    Private ReadOnly AlarmMonitor As New BackgroundWorker()
     Private ReadOnly Explorer As New BackgroundWorker()
     Private WithEvents AutoLogoutTimer As New BackgroundWorker()
 
@@ -24,6 +42,10 @@ Class MainWindow
     Dim monitoredDrives As String = "ZY"
     Dim timerOn As Boolean = True
     Dim onlinestatus As String = "none"
+    Dim alarmsList As New List(Of AlarmInfo)
+    Dim alarmsArray As AlarmInfo()
+    Dim toastWindow As New ToastBox()
+
 #End Region
 
     Private Sub BGProgress(ByVal sender As Object, e As ProgressChangedEventArgs) Handles AutoLogoutTimer.ProgressChanged
@@ -43,15 +65,15 @@ Class MainWindow
         AddHandler OneDriveMapper.DoWork, AddressOf HandleOneDriveMapper
         AddHandler OneDriveMapper.RunWorkerCompleted, AddressOf MapDrivesComplete
         AddHandler DriveMonitor.DoWork, AddressOf HandleDriveMonitor
+        AddHandler AlarmMonitor.DoWork, AddressOf HandleAlarmMonitor
         AddHandler Explorer.DoWork, AddressOf HandleExplorerStart
         AddHandler AutoLogoutTimer.DoWork, AddressOf AutoLogoutTimerThread
 
-
         AutoLogoutTimer.WorkerReportsProgress = True
         AutoLogoutTimer.RunWorkerAsync()
-        'OneDriveMapper.WorkerReportsProgress = True
         OneDriveMapper.RunWorkerAsync()
         DriveMonitor.RunWorkerAsync()
+        AlarmMonitor.RunWorkerAsync()
 
         If online Then
             PrintMapper.RunWorkerAsync()
@@ -82,6 +104,9 @@ Class MainWindow
                 ReportBroken()
             End If
             VersionLabel.Content = String.Format("{0}", ret)
+            Dim cversion As String = WebLoader.Request(WEB_URL & WEB_GetCurrentVersion)
+
+            VersionDisplay.Content = String.Format("{0}{1}Latest {2}", ret, vbCrLf, cversion)
             ret = WebLoader.Request(WEB_URL & WEB_CheckOnline)
             statusLabel.Content = ret
             onlinestatus = ret
@@ -105,6 +130,8 @@ Class MainWindow
                     range.Load(fstream, DataFormats.Rtf)
                 End Using
             End If
+
+            LoadAlarms()
         Catch ex As Exception
             DisplayBox.AppendText("Middleman not available. Contact Network Services." & vbCrLf)
             AcceptButton.IsEnabled = False
@@ -113,6 +140,29 @@ Class MainWindow
         End Try
     End Sub
 #End Region
+
+    Public Sub LoadAlarms()
+        Try
+            alarmsList.Clear()
+            Dim alarm As AlarmInfo
+            Dim ret As String = WebLoader.Request(WEB_URL & WEB_LoadAlarms)
+            Dim alarmFields() As String
+            Dim alarmParts() As String = ret.Split(";"c)
+            For Each individualAlarm In alarmParts
+                alarm = New AlarmInfo
+                alarmFields = individualAlarm.Split(","c)
+                alarm.name = alarmFields(0)
+                alarm.time = alarmFields(1)
+                alarm.sounder = True
+                alarm.soundfile = alarmFields(2)
+                alarmsList.Add(alarm)
+            Next
+            alarmsArray = alarmsList.ToArray()
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
 
 #Region "Handlers"
     Private Sub HandlePassword(pwdString As String)
@@ -259,8 +309,44 @@ Class MainWindow
     Private Sub HandleDriveMonitor(sender As Object, e As DoWorkEventArgs)
         While True
             MonitorDrives()
-            Threading.Thread.Sleep(2000)
+
+            Threading.Thread.Sleep(5000)
         End While
+    End Sub
+
+    Private Sub HandleAlarmMonitor(sender As Object, e As DoWorkEventArgs)
+        Dim count As Integer = 0
+        While True
+            count = count + 1
+            If count > 8 Then
+                count = 0
+                LoadAlarms()
+            End If
+            MonitorAlarms()
+            Threading.Thread.Sleep(15000)
+        End While
+
+    End Sub
+
+    Private Sub MonitorAlarms()
+        Dim tNow As Date = Date.Parse(Now.ToShortTimeString)
+        Dim cTime As Date
+        Dim diff As TimeSpan
+        Dim alarm As AlarmInfo
+
+        For x As Integer = 0 To alarmsList.Count - 1
+            alarm = alarmsArray(x)
+            If alarm.sounder Then
+                cTime = Date.Parse(alarm.time)
+                If tNow = cTime Then
+                    diff = tNow - cTime
+                    PlayAlarm("Alarm", alarm.name, alarm.soundfile)
+                    alarm.sounder = False
+                    alarmsArray(x).sounder = False
+
+                End If
+            End If
+        Next
     End Sub
 
     Private Sub MonitorDrives()
@@ -290,9 +376,6 @@ Class MainWindow
         End If
     End Sub
 
-    ''' <summary>
-    ''' Needs to be made 32bit safe.  Filepath for ascookieintegrated 
-    ''' </summary>
     Private Sub MapZ()
         Log("MAPZ: running", EventLogEntryType.Information)
         Dim outline As String = ""
@@ -580,9 +663,24 @@ Class MainWindow
         Return If(ret.Equals("True"), True, False)
 
     End Function
+
+    Private Sub PlayAlarm(ByVal alarmTitle As String, ByVal alarmName As String, ByVal alarmSound As String)
+        If IsAlarmAllowed() Then
+            Toast(alarmTitle, alarmName)
+            Dim sp As New Media.SoundPlayer("C:\windows\media\alarm10.wav")
+            sp.Play()
+        End If
+    End Sub
 End Class
 
 Structure Pinfo
     Public connectionString As String
     Public isDefault As Boolean
+End Structure
+
+Structure AlarmInfo
+    Public name As String
+    Public time As String
+    Public sounder As Boolean
+    Public soundfile As String
 End Structure

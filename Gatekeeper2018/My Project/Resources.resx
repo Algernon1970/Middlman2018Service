@@ -130,6 +130,9 @@
   <data name="redcloud" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\redcloud.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="submarine_diving_alarm_daniel_simon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\submarine-diving-alarm-daniel_simon.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="whitecloud" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\whitecloud.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

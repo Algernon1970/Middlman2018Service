@@ -18,7 +18,28 @@ Public Class CommandHandler
     End Sub
 
     Public Function GetVersion() As String
-        Return "Version 2018.11.a8"
+        Return "Version 2018.12.B2"
+    End Function
+
+    Public Function GetCurrentVersion() As String
+        Dim tbl_info As New ZuulDataSetTableAdapters.Tbl_InfoTableAdapter
+        Dim dr As DataRow = tbl_info.GetCurrentVersion().Rows(0)
+        Dim ret As String = String.Format("{0} ({1})", dr.Field(Of String)("Notes"), dr.Field(Of Date)("Datestamp").ToShortDateString)
+        Return ret
+    End Function
+
+    Public Function LoadAlarms() As String
+        Dim ret As String = ""
+        Dim tbl_alarms As New ZuulDataSetTableAdapters.Tbl_AlarmsTableAdapter
+        Dim dt As DataTable = tbl_alarms.GetData
+        For Each dr As DataRow In dt.Rows
+            If ret.Length > 1 Then
+                ret = String.Format("{0};{1},{2},{3}", ret, dr.Field(Of String)("AlarmName"), dr.Field(Of String)("AlarmTime"), dr.Field(Of String)("AlarmSound"))
+            Else
+                ret = String.Format("{0},{1},{2}", dr.Field(Of String)("AlarmName"), dr.Field(Of String)("AlarmTime"), dr.Field(Of String)("AlarmSound"))
+            End If
+        Next
+        Return ret
     End Function
 
     Public Function SetUser(ByVal params As String) As String

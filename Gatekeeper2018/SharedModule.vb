@@ -29,6 +29,7 @@
     Public Const WEB_MusicRedirect As String = "MusicRedirect"
     Public Const WEB_Logout As String = "ForceLogout"
     Public Const WEB_GetVersion As String = "GetVersion"
+    Public Const WEB_GetCurrentVersion As String = "GetCurrentVersion"
     Public Const WEB_GetAllPrinters As String = "GetAllPrinters"
     Public Const Web_GetPID As String = "GetPrinterID&params="
     Public Const WEB_GetPrinterNameByConnection As String = "GetPrinterNameByConnection&params="
@@ -38,6 +39,7 @@
     Public Const WEB_UpdateDefaultPrinter As String = "UpdateDefaultPrinter&params="
     Public Const WEB_RemoveDefaultByComputer As String = "RemoveDefaultPrinter&params="
     Public Const WEB_IsLaptop As String = "IsLaptop"
+    Public Const WEB_LoadAlarms As String = "LoadAlarms"
 #End Region
 
     Public eLog As EventLog = Nothing
